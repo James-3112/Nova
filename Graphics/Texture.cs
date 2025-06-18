@@ -7,6 +7,7 @@ namespace Nova.Graphics {
         private GL gl;
         private uint handle;
 
+
         public Texture(GL gl, string path) {
             this.gl = gl;
             handle = gl.GenTexture();
@@ -39,10 +40,12 @@ namespace Nova.Graphics {
             gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
 
+
         public void Bind(TextureUnit textureSlot = TextureUnit.Texture0) {
             gl.ActiveTexture(textureSlot);
             gl.BindTexture(TextureTarget.Texture2D, handle);
         }
+
 
         public void Dispose() {
             gl.DeleteTexture(handle);

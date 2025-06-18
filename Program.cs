@@ -10,6 +10,7 @@ using StbImageSharp;
 
 using Nova.Graphics;
 using Nova.Utilities;
+using Nova.ECS;
 
 
 class Program {
@@ -24,7 +25,8 @@ class Program {
 
     private static Vector2 lastMousePosition;
 
-    private static Mesh mesh = null!;
+    private static Entity entity = null!;
+    private static Entity entity2 = null!;
 
     private static readonly float[] vertices = {
         //X    Y      Z     U   V
@@ -120,7 +122,11 @@ class Program {
         gl.ClearColor(Color.CornflowerBlue);
 
         // Instantiating mesh --------------------------------------------
-        mesh = new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png");
+        Mesh mesh = new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png");
+        entity = new Entity(mesh);
+
+        entity2 = new Entity(mesh);
+        entity2.transform.position = new Vector3(3, 0, 3);
     }
 
 
@@ -150,20 +156,12 @@ class Program {
         gl.Enable(EnableCap.DepthTest);
         gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
-        // Mesh Render -------------------------------------------------------
-        mesh.Bind();
-
 
         float difference = (float) (window.Time * 100);
+        entity.transform.rotationEulerAngles = new Vector3(difference, difference, 0);
 
-        Transform transform = new Transform();
-        transform.rotationEulerAngles = new Vector3(difference, difference, 0);
-        mesh.shader.SetUniform("uModel", transform.matrix);
-
-        camera.CreateMatrices(mesh.shader, window.FramebufferSize);
-
-
-        mesh.Render();
+        entity.Render(camera, window.FramebufferSize);
+        entity2.Render(camera, window.FramebufferSize);
     }
 
 
@@ -193,7 +191,8 @@ class Program {
 
 
     private static void OnClose() {
-        mesh.Dispose();
+        entity.Dispose();
+        entity2.Dispose();
     }
 
     private static void KeyDown(IKeyboard keyboard, Key key, int keyCode) {

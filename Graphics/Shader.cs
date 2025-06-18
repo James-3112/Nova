@@ -7,6 +7,7 @@ namespace Nova.Graphics {
         private GL gl;
         private uint handle;
 
+
         public Shader(GL gl, string vertexPath, string fragmentPath) {
             this.gl = gl;
 
@@ -36,9 +37,11 @@ namespace Nova.Graphics {
             gl.DeleteShader(fragmentShader);
         }
 
+
         public void Use() {
             gl.UseProgram(handle);
         }
+
 
         public void SetUniform(string name, int value) {
             // Set the texture uniform
@@ -52,6 +55,7 @@ namespace Nova.Graphics {
             gl.Uniform1(location, value);
         }
 
+
         public void SetUniform(string name, float value) {
             int location = gl.GetUniformLocation(handle, name);
 
@@ -61,6 +65,7 @@ namespace Nova.Graphics {
 
             gl.Uniform1(location, value);
         }
+
 
         public unsafe void SetUniform(string name, Matrix4x4 value) {
             int location = gl.GetUniformLocation(handle, name);
@@ -72,9 +77,11 @@ namespace Nova.Graphics {
             gl.UniformMatrix4(location, 1, false, (float*) &value);
         }
 
+
         public void Dispose() {
             gl.DeleteProgram(handle);
         }
+
 
         private uint LoadShader(ShaderType type, string path) {
             string shaderCode = File.ReadAllText(path);
