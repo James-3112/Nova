@@ -20,38 +20,39 @@ namespace Nova.Graphics {
         private BufferObject<uint> ebo = null!;
         private VertexArrayObject<float, uint> vao = null!;
 
-        public static Nova.Graphics.Texture texture = null!;
-        private static Nova.Graphics.Shader shader = null!;
+        public Texture texture = null!;
+        public Shader shader = null!;
 
-        public Mesh(GL gl) {
+
+        public Mesh(GL gl, float[] vertices, uint[] indices, string vertexPath, string fragmentPath, string texturePath) {
             this.gl = gl;
 
-            //Instantiating our new abstractions
             ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
             vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
             vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);
 
-            //Telling the VAO object how to lay out the attribute pointers
+            // Telling the VAO object how to lay out the attribute pointers
             vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float, 5, 0);
             vao.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, 5, 3);
 
-            shader = new Nova.Graphics.Shader(gl, "shader.vert", "shader.frag");
-            texture = new Nova.Graphics.Texture(gl, "silk.png");
+            shader = new Shader(gl, vertexPath, fragmentPath);
+            texture = new Texture(gl, texturePath);
         }
 
-        public void OnRender() {
+
+        public void Bind() {
             vao.Bind();
             texture.Bind(TextureUnit.Texture0);
             
             shader.Use();
             shader.SetUniform("uTexture", 0);
-
-            float difference = (float) (window.Time * 100);
-
-            Transform transform = new Transform();
-            transform.rotationEulerAngles = new Vector3(difference, difference, 0);
-            shader.SetUniform("uModel", transform.matrix);
         }
+
+
+        public void Render() {
+            gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+        }
+
 
         public void Dispose()  {
             vbo.Dispose();

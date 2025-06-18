@@ -24,6 +24,8 @@ class Program {
 
     private static Vector2 lastMousePosition;
 
+    private static Mesh mesh = null!;
+
     private static readonly float[] vertices = {
         //X    Y      Z     U   V
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
@@ -118,6 +120,7 @@ class Program {
         gl.ClearColor(Color.CornflowerBlue);
 
         // Instantiating mesh --------------------------------------------
+        mesh = new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png");
     }
 
 
@@ -148,10 +151,19 @@ class Program {
         gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
         // Mesh Render -------------------------------------------------------
+        mesh.Bind();
 
-        camera.CreateMatrices(shader, window.FramebufferSize);
 
-        gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+        float difference = (float) (window.Time * 100);
+
+        Transform transform = new Transform();
+        transform.rotationEulerAngles = new Vector3(difference, difference, 0);
+        mesh.shader.SetUniform("uModel", transform.matrix);
+
+        camera.CreateMatrices(mesh.shader, window.FramebufferSize);
+
+
+        mesh.Render();
     }
 
 
@@ -181,7 +193,7 @@ class Program {
 
 
     private static void OnClose() {
-        // Mesh Dispose --------------------------------------------------------
+        mesh.Dispose();
     }
 
     private static void KeyDown(IKeyboard keyboard, Key key, int keyCode) {
