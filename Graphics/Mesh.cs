@@ -14,16 +14,51 @@ using Nova.Utilities;
 
 namespace Nova.Graphics {
     public class Mesh: IDisposable {
+        private GL gl;
+
         private BufferObject<float> vbo = null!;
         private BufferObject<uint> ebo = null!;
         private VertexArrayObject<float, uint> vao = null!;
 
-        public Mesh() {
+        public static Nova.Graphics.Texture texture = null!;
+        private static Nova.Graphics.Shader shader = null!;
 
+        public Mesh(GL gl) {
+            this.gl = gl;
+
+            //Instantiating our new abstractions
+            ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
+            vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
+            vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);
+
+            //Telling the VAO object how to lay out the attribute pointers
+            vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float, 5, 0);
+            vao.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, 5, 3);
+
+            shader = new Nova.Graphics.Shader(gl, "shader.vert", "shader.frag");
+            texture = new Nova.Graphics.Texture(gl, "silk.png");
+        }
+
+        public void OnRender() {
+            vao.Bind();
+            texture.Bind(TextureUnit.Texture0);
+            
+            shader.Use();
+            shader.SetUniform("uTexture", 0);
+
+            float difference = (float) (window.Time * 100);
+
+            Transform transform = new Transform();
+            transform.rotationEulerAngles = new Vector3(difference, difference, 0);
+            shader.SetUniform("uModel", transform.matrix);
         }
 
         public void Dispose()  {
-            
+            vbo.Dispose();
+            ebo.Dispose();
+            vao.Dispose();
+            shader.Dispose();
+            texture.Dispose();
         }
     }
 }

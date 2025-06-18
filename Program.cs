@@ -18,13 +18,6 @@ class Program {
 
     private static IKeyboard primaryKeyboard = null!;
 
-    private static BufferObject<float> vbo = null!;
-    private static BufferObject<uint> ebo = null!;
-    private static VertexArrayObject<float, uint> vao = null!;
-
-    public static Nova.Graphics.Texture texture = null!;
-    private static Nova.Graphics.Shader shader = null!;
-
     private static Camera camera = null!;
     private static float yaw = -90f;
     private static float pitch = 0f;
@@ -124,17 +117,7 @@ class Program {
         gl = window.CreateOpenGL();
         gl.ClearColor(Color.CornflowerBlue);
 
-        //Instantiating our new abstractions
-        ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
-        vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
-        vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);
-
-        //Telling the VAO object how to lay out the attribute pointers
-        vao.VertexAttributePointer(0, 3, VertexAttribPointerType.Float, 5, 0);
-        vao.VertexAttributePointer(1, 2, VertexAttribPointerType.Float, 5, 3);
-
-        shader = new Nova.Graphics.Shader(gl, "shader.vert", "shader.frag");
-        texture = new Nova.Graphics.Texture(gl, "silk.png");
+        // Instantiating mesh --------------------------------------------
     }
 
 
@@ -164,17 +147,7 @@ class Program {
         gl.Enable(EnableCap.DepthTest);
         gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
-        vao.Bind();
-        texture.Bind(TextureUnit.Texture0);
-        
-        shader.Use();
-        shader.SetUniform("uTexture", 0);
-
-        float difference = (float) (window.Time * 100);
-
-        Transform transform = new Transform();
-        transform.rotationEulerAngles = new Vector3(difference, difference, 0);
-        shader.SetUniform("uModel", transform.matrix);
+        // Mesh Render -------------------------------------------------------
 
         camera.CreateMatrices(shader, window.FramebufferSize);
 
@@ -208,11 +181,7 @@ class Program {
 
 
     private static void OnClose() {
-        vbo.Dispose();
-        ebo.Dispose();
-        vao.Dispose();
-        shader.Dispose();
-        texture.Dispose();
+        // Mesh Dispose --------------------------------------------------------
     }
 
     private static void KeyDown(IKeyboard keyboard, Key key, int keyCode) {
