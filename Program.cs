@@ -213,9 +213,10 @@ class Program {
 
 
 
-// To Do
-// Fix VertexAttributePointer so they are more useable
-// Create a Event system
-// Rename 'MathUtils' to 'Math'
+// To Do List
+// Change the Camera class to a Component
+// Implement the 'Scene' class for rendering
+// Move the example file to the main Program file
 // Create a Debug class
-// 
+// Fix VertexAttributePointer and Mesh Render method so they are more useable
+// Lighting - Ambient, Diffuse, Specular
