@@ -1,8 +1,15 @@
 using Silk.NET.OpenGL;
+using Silk.NET.Maths;
+
+using Nova.Core;
+using Nova.Graphics;
+
+using Texture = Nova.Graphics.Texture;
+using Shader = Nova.Graphics.Shader;
 
 
-namespace Nova.Graphics {
-    public class Mesh: IDisposable {
+namespace Nova.ObjectOrientedArchitecture {
+    public class Mesh : Component, IDisposable {
         private GL gl;
 
         private BufferObject<float> vbo;
@@ -38,7 +45,12 @@ namespace Nova.Graphics {
         }
 
 
-        public void Render() {
+        public void Render(Camera camera, Vector2D<int> size) {
+            Bind();
+            
+            shader.SetUniform("uModel", gameObject.GetComponent<Transform>().matrix);
+            camera.CreateMatrices(shader, size);
+
             gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }
 

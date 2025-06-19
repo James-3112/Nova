@@ -1,8 +1,9 @@
 using System.Numerics;
+using Nova.Utilities;
 
 
-namespace Nova.Utilities {
-    public class Transform {
+namespace Nova.ObjectOrientedArchitecture {
+    public class Transform : Component {
         public Vector3 position = new Vector3(0,0,0);
         public float scale = 1f;
         

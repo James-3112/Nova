@@ -3,7 +3,7 @@ using StbImageSharp;
 
 
 namespace Nova.Graphics {
-    public unsafe class Texture: IDisposable {
+    public unsafe class Texture : IDisposable {
         private GL gl;
         private uint handle;
 

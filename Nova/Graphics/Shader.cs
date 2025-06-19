@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 
 
 namespace Nova.Graphics {
-    public class Shader: IDisposable {
+    public class Shader : IDisposable {
         private GL gl;
         private uint handle;
 

@@ -6,11 +6,9 @@ using System.Numerics;
 
 using System.Drawing;
 
-using StbImageSharp;
-
-using Nova.Graphics;
+using Nova.Core;
 using Nova.Utilities;
-using Nova.ECS;
+using Nova.ObjectOrientedArchitecture;
 
 
 class Program {
@@ -25,8 +23,8 @@ class Program {
 
     private static Vector2 lastMousePosition;
 
-    private static Entity entity = null!;
-    private static Entity entity2 = null!;
+    private static GameObject gameObject1 = new GameObject();
+    private static GameObject gameObject2 = new GameObject();
 
     private static readonly float[] vertices = {
         //X    Y      Z     U   V
@@ -98,7 +96,7 @@ class Program {
     }
 
 
-    private unsafe static void OnLoad() {
+    private static void OnLoad() {
         // Camera
         camera = new Camera();
         camera.transform.position = new Vector3(0.0f, 0.0f, 3.0f);
@@ -121,12 +119,14 @@ class Program {
         gl = window.CreateOpenGL();
         gl.ClearColor(Color.CornflowerBlue);
 
-        // Instantiating mesh --------------------------------------------
-        Mesh mesh = new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png");
-        entity = new Entity(mesh);
+        // Add Game Objects
+        gameObject1.AddComponent(new Transform());
+        gameObject1.AddComponent(new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png"));
 
-        entity2 = new Entity(mesh);
-        entity2.transform.position = new Vector3(3, 0, 3);
+        gameObject2.AddComponent(new Transform());
+        gameObject2.AddComponent(new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png"));
+
+        gameObject2.GetComponent<Transform>().position = new Vector3(3, 0, 3);
     }
 
 
@@ -152,16 +152,16 @@ class Program {
     }
 
 
-    private unsafe static void OnRender(double deltaTime) {
+    private static void OnRender(double deltaTime) {
         gl.Enable(EnableCap.DepthTest);
         gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
 
         float difference = (float) (window.Time * 100);
-        entity.transform.rotationEulerAngles = new Vector3(difference, difference, 0);
+        gameObject1.GetComponent<Transform>().rotationEulerAngles = new Vector3(difference, difference, 0);
 
-        entity.Render(camera, window.FramebufferSize);
-        entity2.Render(camera, window.FramebufferSize);
+        gameObject1.GetComponent<Mesh>().Render(camera, window.FramebufferSize);
+        gameObject2.GetComponent<Mesh>().Render(camera, window.FramebufferSize);
     }
 
 
@@ -170,7 +170,7 @@ class Program {
     }
 
 
-    private static unsafe void OnMouseMove(IMouse mouse, Vector2 position) {
+    private static void OnMouseMove(IMouse mouse, Vector2 position) {
         var lookSensitivity = 0.1f;
         if (lastMousePosition == default) lastMousePosition = position;
         else {
@@ -191,9 +191,10 @@ class Program {
 
 
     private static void OnClose() {
-        entity.Dispose();
-        entity2.Dispose();
+        gameObject1.Dispose();
+        gameObject2.Dispose();
     }
+
 
     private static void KeyDown(IKeyboard keyboard, Key key, int keyCode) {
         if (key == Key.Escape) {
@@ -207,3 +208,5 @@ class Program {
 // To Do
 // Back face culling off
 // V-sync off
+// Fix VertexAttributePointer so they are more useable
+// Create a Event system

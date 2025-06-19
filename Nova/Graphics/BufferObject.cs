@@ -2,7 +2,7 @@ using Silk.NET.OpenGL;
 
 
 namespace Nova.Graphics {
-    public class BufferObject<DataType>: IDisposable
+    public class BufferObject<DataType> : IDisposable
         where DataType : unmanaged
     {
         private GL gl;
