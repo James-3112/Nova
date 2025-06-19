@@ -1,0 +1,1 @@
+// Use a static class to change the scene

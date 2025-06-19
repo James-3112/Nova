@@ -10,7 +10,7 @@ using Shader = Nova.Graphics.Shader;
 
 namespace Nova.ObjectOrientedArchitecture {
     public class Mesh : Component, IDisposable {
-        private GL gl;
+        private GL gl = Engine.gl;
 
         private BufferObject<float> vbo;
         private BufferObject<uint> ebo;
@@ -20,9 +20,7 @@ namespace Nova.ObjectOrientedArchitecture {
         public Shader shader;
 
 
-        public Mesh(GL gl, float[] vertices, uint[] indices, string vertexPath, string fragmentPath, string texturePath) {
-            this.gl = gl;
-
+        public Mesh(float[] vertices, uint[] indices, string vertexPath, string fragmentPath, string texturePath) {
             ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
             vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
             vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);

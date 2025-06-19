@@ -129,10 +129,10 @@ class Program {
 
         // Add Game Objects
         gameObject1.AddComponent(new Transform());
-        gameObject1.AddComponent(new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png"));
+        gameObject1.AddComponent(new Mesh(vertices, indices, "shader.vert", "shader.frag", "silk.png"));
 
         gameObject2.AddComponent(new Transform());
-        gameObject2.AddComponent(new Mesh(gl, vertices, indices, "shader.vert", "shader.frag", "silk.png"));
+        gameObject2.AddComponent(new Mesh(vertices, indices, "shader.vert", "shader.frag", "silk.png"));
 
         gameObject2.GetComponent<Transform>().position = new Vector3(3, 0, 3);
     }
@@ -216,3 +216,6 @@ class Program {
 // To Do
 // Fix VertexAttributePointer so they are more useable
 // Create a Event system
+// Rename 'MathUtils' to 'Math'
+// Create a Debug class
+// 
