@@ -34,10 +34,6 @@ namespace Nova.Graphics {
             gl.TexParameter(GLEnum.Texture2D, GLEnum.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
             gl.GenerateMipmap(TextureTarget.Texture2D);
-
-            // Enable blending and set the blend to use the alpha to subtract
-            gl.Enable(EnableCap.Blend);
-            gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
         }
 
 

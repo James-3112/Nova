@@ -80,7 +80,8 @@ class Program {
     static void Main(string[] args) {
         WindowOptions options = WindowOptions.Default with {
             Size = new Vector2D<int>(800, 600),
-            Title = "Nova"
+            Title = "Nova",
+            VSync = false
         };
 
         window = Window.Create(options);
@@ -118,6 +119,13 @@ class Program {
         // OpenGL Init
         gl = window.CreateOpenGL();
         gl.ClearColor(Color.CornflowerBlue);
+
+        // Enable blending for textures and set the blend to use the alpha to subtract
+        gl.Enable(EnableCap.Blend);
+        gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+        // Enable backface culling
+        gl.Enable(GLEnum.CullFace);
 
         // Add Game Objects
         gameObject1.AddComponent(new Transform());
@@ -206,7 +214,5 @@ class Program {
 
 
 // To Do
-// Back face culling off
-// V-sync off
 // Fix VertexAttributePointer so they are more useable
 // Create a Event system
