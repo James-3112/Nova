@@ -102,8 +102,8 @@ namespace Nova.Core {
         private void OnUpdate(double deltaTime) {
             updateEvent?.Invoke(deltaTime);
 
-            Input.Update();
             Scene.Update(deltaTime);
+            Input.Update();
         }
 
 
