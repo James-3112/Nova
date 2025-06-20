@@ -10,14 +10,12 @@ using StbImageSharp;
 
 using Nova.Graphics;
 using Nova.Utilities;
+using Nova.ObjectOrientedArchitecture;
 
 
 namespace Nova.Core {
     public class Engine {
-        public IWindow window;
-
-        public IKeyboard keyboard = null!;
-        public IMouse mouse = null!;
+        public static IWindow window = null!;
 
         public static GL gl = null!;
 
@@ -77,11 +75,8 @@ namespace Nova.Core {
 
 
         private void OnLoad() {
-            // Input Init
             IInputContext input = window.CreateInput();
-
-            keyboard = input.Keyboards.FirstOrDefault()!;
-            mouse = input.Mice.FirstOrDefault()!;
+            Input.Initialize(input.Keyboards.FirstOrDefault()!, input.Mice.FirstOrDefault()!);
 
             // mouse.Cursor.CursorMode = CursorMode.Raw;
             // mouse.MouseMove += OnMouseMove;
@@ -97,17 +92,25 @@ namespace Nova.Core {
             // Enable backface culling
             gl.Enable(GLEnum.CullFace);
 
+            // Enable draw by depth
+            gl.Enable(EnableCap.DepthTest);
+
             startEvent?.Invoke();
         }
 
 
         private void OnUpdate(double deltaTime) {
             updateEvent?.Invoke(deltaTime);
+
+            Input.Update();
+            Scene.Update(deltaTime);
         }
 
 
         private void OnRender(double deltaTime) {
-            
+            gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+
+            Scene.Render(deltaTime);
         }
 
 
@@ -117,7 +120,7 @@ namespace Nova.Core {
 
 
         private void OnClose() {
-            
+            Scene.Unload();
         }
     }
 }

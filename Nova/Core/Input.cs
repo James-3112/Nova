@@ -73,6 +73,8 @@ namespace Nova.Core {
         public static bool IsMouseButtonReleased(MouseButton button) => mouseReleased.Contains(button);
         public static bool IsMouseButtonHeld(MouseButton button) => mouseHeld.Contains(button);
 
+        public static void SetMouseMode(CursorMode cursorMode) => mouse.Cursor.CursorMode = cursorMode;
+
 
         public static void Update() {
             keysPressed.Clear();

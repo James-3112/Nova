@@ -34,7 +34,7 @@ namespace Nova.ObjectOrientedArchitecture {
         }
 
 
-        public void Bind() {
+        private void Bind() {
             vao.Bind();
             texture.Bind(TextureUnit.Texture0);
             
@@ -43,11 +43,11 @@ namespace Nova.ObjectOrientedArchitecture {
         }
 
 
-        public void Render(Camera camera, Vector2D<int> size) {
+        public override void Render(double deltaTime) {
             Bind();
             
             shader.SetUniform("uModel", gameObject.GetComponent<Transform>().matrix);
-            camera.CreateMatrices(shader, size);
+            Scene.currentScene.camera.CreateMatrices(shader, Engine.window.FramebufferSize);
 
             gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }

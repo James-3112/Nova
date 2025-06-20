@@ -3,7 +3,9 @@ namespace Nova.ObjectOrientedArchitecture {
         public GameObject gameObject = null!;
         public bool enabled = true;
 
-        public virtual void OnAdd() { }
-        public virtual void Update() { }
+        public virtual void OnAdd() {}
+        public virtual void Start() {}
+        public virtual void Update(double deltaTime) {}
+        public virtual void Render(double deltaTime) {}
     }
 }

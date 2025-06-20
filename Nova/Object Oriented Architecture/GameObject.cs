@@ -6,8 +6,11 @@ namespace Nova.ObjectOrientedArchitecture {
         private List<Component> components = new();
 
 
-        public GameObject(string name = "GameObject") {
+        public GameObject(string name = "GameObject", Scene? scene = null) {
             this.name = name;
+
+            if (scene == null) Scene.AddGameObject(Scene.currentScene, this);
+            else Scene.AddGameObject(scene, this);
         }
 
 
@@ -24,13 +27,32 @@ namespace Nova.ObjectOrientedArchitecture {
         }
 
 
-        public void Update() {
+        public void Start() {
             if (!active) return;
 
             foreach (Component component in components) {
-                if (component.enabled) component.Update();
+                if (component.enabled) component.Start();
             }
         }
+
+
+        public void Update(double deltaTime) {
+            if (!active) return;
+
+            foreach (Component component in components) {
+                if (component.enabled) component.Update(deltaTime);
+            }
+        }
+
+
+        public void Render(double deltaTime) {
+            if (!active) return;
+
+            foreach (Component component in components) {
+                if (component.enabled) component.Render(deltaTime);
+            }
+        }
+
 
         public void Dispose() {
             foreach (Component component in components) {

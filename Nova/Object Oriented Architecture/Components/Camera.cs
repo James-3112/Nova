@@ -21,7 +21,7 @@ namespace Nova.Core {
         }
 
 
-        public override void OnAdd() {
+        public override void Start() {
             transform = gameObject.GetComponent<Transform>();
         }
 
