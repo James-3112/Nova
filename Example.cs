@@ -14,7 +14,7 @@ using Nova.ObjectOrientedArchitecture;
 class Example {
     private static Engine engine = null!;
 
-    private static Camera camera = null!;
+    private static GameObject cameraObject = null!;
     private static float yaw = -90f;
     private static float pitch = 0f;
     private static float lookSensitivity = 0.1f;
@@ -84,9 +84,12 @@ class Example {
 
     private static void Start() {
         // Camera
-        camera = new Camera();
-        camera.transform.position = new Vector3(0.0f, 0.0f, 3.0f);
-        camera.transform.rotationEulerAngles = new Vector3(0.0f, 0.0f, -1.0f);
+        cameraObject = new GameObject();
+        cameraObject.AddComponent(new Transform());
+        cameraObject.GetComponent<Transform>().position = new Vector3(0.0f, 0.0f, 3.0f);
+        cameraObject.GetComponent<Transform>().rotationEulerAngles = new Vector3(0.0f, 0.0f, -1.0f);
+
+        cameraObject.AddComponent(new Camera());
 
         // Add Game Objects
         gameObject1.AddComponent(new Transform());
@@ -100,20 +103,22 @@ class Example {
 
 
     private static void Update(double deltaTime) {
+        Transform cameraTransform = cameraObject.GetComponent<Transform>();
+
         // Movement
         float moveSpeed = 2.5f * (float)deltaTime;
 
         if (Input.IsKeyPressed(Key.W)) {
-            camera.transform.position += moveSpeed * camera.transform.rotationEulerAngles;
+            cameraTransform.position += moveSpeed * cameraTransform.rotationEulerAngles;
         }
         if (Input.IsKeyPressed(Key.S)) {
-            camera.transform.position -= moveSpeed * camera.transform.rotationEulerAngles;
+            cameraTransform.position -= moveSpeed * cameraTransform.rotationEulerAngles;
         }
         if (Input.IsKeyPressed(Key.A)) {
-            camera.transform.position -= Vector3.Normalize(Vector3.Cross(camera.transform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
+            cameraTransform.position -= Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
         }
         if (Input.IsKeyPressed(Key.D)) {
-            camera.transform.position += Vector3.Normalize(Vector3.Cross(camera.transform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
+            cameraTransform.position += Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
         }
 
         // Camera
@@ -122,9 +127,9 @@ class Example {
 
         pitch = Math.Clamp(pitch, -89.0f, 89.0f);
 
-        camera.transform.rotationEulerX = MathF.Cos(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
-        camera.transform.rotationEulerY = MathF.Sin(MathUtils.DegreesToRadians(pitch));
-        camera.transform.rotationEulerZ = MathF.Sin(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
+        cameraTransform.rotationEulerX = MathF.Cos(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
+        cameraTransform.rotationEulerY = MathF.Sin(MathUtils.DegreesToRadians(pitch));
+        cameraTransform.rotationEulerZ = MathF.Sin(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
 
         // Quiting
         if (Input.IsKeyPressed(Key.Escape)) engine.Close();

@@ -13,11 +13,10 @@ using Nova.ObjectOrientedArchitecture;
 
 class Program {
     private static IWindow window = null!;
-    private static GL gl = null!;
 
     private static IKeyboard primaryKeyboard = null!;
 
-    private static Camera camera = null!;
+    private static GameObject cameraObject = null!;
     private static float yaw = -90f;
     private static float pitch = 0f;
 
@@ -99,9 +98,12 @@ class Program {
 
     private static void OnLoad() {
         // Camera
-        camera = new Camera();
-        camera.transform.position = new Vector3(0.0f, 0.0f, 3.0f);
-        camera.transform.rotationEulerAngles = new Vector3(0.0f, 0.0f, -1.0f);
+        cameraObject = new GameObject();
+        cameraObject.AddComponent(new Transform());
+        cameraObject.GetComponent<Transform>().position = new Vector3(0.0f, 0.0f, 3.0f);
+        cameraObject.GetComponent<Transform>().rotationEulerAngles = new Vector3(0.0f, 0.0f, -1.0f);
+
+        cameraObject.AddComponent(new Camera());
 
         // Input Init
         IInputContext input = window.CreateInput();
@@ -117,15 +119,15 @@ class Program {
         }
 
         // OpenGL Init
-        gl = window.CreateOpenGL();
-        gl.ClearColor(Color.CornflowerBlue);
+        Engine.gl = window.CreateOpenGL();
+        Engine.gl.ClearColor(Color.CornflowerBlue);
 
         // Enable blending for textures and set the blend to use the alpha to subtract
-        gl.Enable(EnableCap.Blend);
-        gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        Engine.gl.Enable(EnableCap.Blend);
+        Engine.gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
         // Enable backface culling
-        gl.Enable(GLEnum.CullFace);
+        Engine.gl.Enable(GLEnum.CullFace);
 
         // Add Game Objects
         gameObject1.AddComponent(new Transform());
@@ -139,46 +141,50 @@ class Program {
 
 
     private static void OnUpdate(double deltaTime) {
+        Transform cameraTransform = cameraObject.GetComponent<Transform>();
+
         var moveSpeed = 2.5f * (float) deltaTime;
 
         if (primaryKeyboard.IsKeyPressed(Key.W)) {
             //Move forwards
-            camera.transform.position += moveSpeed * camera.transform.rotationEulerAngles;
+            cameraTransform.position += moveSpeed * cameraTransform.rotationEulerAngles;
         }
         if (primaryKeyboard.IsKeyPressed(Key.S)) {
             //Move backwards
-            camera.transform.position -= moveSpeed * camera.transform.rotationEulerAngles;
+            cameraTransform.position -= moveSpeed * cameraTransform.rotationEulerAngles;
         }
         if (primaryKeyboard.IsKeyPressed(Key.A)) {
             //Move left
-            camera.transform.position -= Vector3.Normalize(Vector3.Cross(camera.transform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
+            cameraTransform.position -= Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
         }
         if (primaryKeyboard.IsKeyPressed(Key.D)) {
             //Move right
-            camera.transform.position += Vector3.Normalize(Vector3.Cross(camera.transform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
+            cameraTransform.position += Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
         }
     }
 
 
     private static void OnRender(double deltaTime) {
-        gl.Enable(EnableCap.DepthTest);
-        gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+        Engine.gl.Enable(EnableCap.DepthTest);
+        Engine.gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
 
         float difference = (float) (window.Time * 100);
         gameObject1.GetComponent<Transform>().rotationEulerAngles = new Vector3(difference, difference, 0);
 
-        gameObject1.GetComponent<Mesh>().Render(camera, window.FramebufferSize);
-        gameObject2.GetComponent<Mesh>().Render(camera, window.FramebufferSize);
+        gameObject1.GetComponent<Mesh>().Render(cameraObject.GetComponent<Camera>(), window.FramebufferSize);
+        gameObject2.GetComponent<Mesh>().Render(cameraObject.GetComponent<Camera>(), window.FramebufferSize);
     }
 
 
     private static void OnFramebufferResize(Vector2D<int> newSize) {
-        gl.Viewport(newSize);
+        Engine.gl.Viewport(newSize);
     }
 
 
     private static void OnMouseMove(IMouse mouse, Vector2 position) {
+        Transform cameraTransform = cameraObject.GetComponent<Transform>();
+
         var lookSensitivity = 0.1f;
         if (lastMousePosition == default) lastMousePosition = position;
         else {
@@ -191,9 +197,9 @@ class Program {
 
             pitch = Math.Clamp(pitch, -89.0f, 89.0f);
 
-            camera.transform.rotationEulerX = MathF.Cos(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
-            camera.transform.rotationEulerY = MathF.Sin(MathUtils.DegreesToRadians(pitch));
-            camera.transform.rotationEulerZ = MathF.Sin(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
+            cameraTransform.rotationEulerX = MathF.Cos(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
+            cameraTransform.rotationEulerY = MathF.Sin(MathUtils.DegreesToRadians(pitch));
+            cameraTransform.rotationEulerZ = MathF.Sin(MathUtils.DegreesToRadians(yaw)) * MathF.Cos(MathUtils.DegreesToRadians(pitch));
         }
     }
 
@@ -214,7 +220,6 @@ class Program {
 
 
 // To Do List
-// Change the Camera class to a Component
 // Implement the 'Scene' class for rendering
 // Move the example file to the main Program file
 // Create a Debug class
