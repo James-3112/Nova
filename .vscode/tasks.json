@@ -16,7 +16,7 @@
       "label": "Build Game",
       "command": "dotnet",
       "type": "process",
-      "args": [ "build", "${workspaceFolder}/GameProjectTemplate/MyGame/MyGame.csproj" ],
+      "args": [ "build", "${workspaceFolder}/Game/Game.csproj" ],
       "problemMatcher": "$msCompile"
     }
   ]

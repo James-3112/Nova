@@ -4,7 +4,7 @@ using Silk.NET.Maths;
 
 namespace NovaEngine {
     public class Mesh : Component, IDisposable {
-        private GL gl = Engine.gl;
+        private GL gl = Application.gl;
 
         private BufferObject<float> vbo;
         private BufferObject<uint> ebo;
@@ -41,7 +41,7 @@ namespace NovaEngine {
             Bind();
             
             shader.SetUniform("uModel", gameObject.GetComponent<Transform>().matrix);
-            Scene.currentScene.camera.CreateMatrices(shader, Engine.window.FramebufferSize);
+            SceneManager.currentScene.mainCamera.CreateMatrices(shader, Application.window.FramebufferSize);
 
             gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }

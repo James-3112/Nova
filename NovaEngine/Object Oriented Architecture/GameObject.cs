@@ -9,8 +9,8 @@ namespace NovaEngine {
         public GameObject(string name = "GameObject", Scene? scene = null) {
             this.name = name;
 
-            if (scene == null) Scene.AddGameObject(Scene.currentScene, this);
-            else Scene.AddGameObject(scene, this);
+            if (scene == null) SceneManager.AddGameObject(SceneManager.currentScene, this);
+            else SceneManager.AddGameObject(scene, this);
         }
 
 
