@@ -2,7 +2,7 @@ using System.Numerics;
 using Silk.NET.OpenGL;
 
 
-namespace Nova.Graphics {
+namespace NovaEngine {
     public class Shader : IDisposable {
         private GL gl;
         private uint handle;

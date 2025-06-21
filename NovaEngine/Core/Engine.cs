@@ -8,12 +8,8 @@ using System.Drawing;
 
 using StbImageSharp;
 
-using Nova.Graphics;
-using Nova.Utilities;
-using Nova.ObjectOrientedArchitecture;
 
-
-namespace Nova.Core {
+namespace NovaEngine {
     public class Engine {
         public static IWindow window = null!;
 

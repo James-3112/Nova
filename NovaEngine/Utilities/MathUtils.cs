@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Nova.Utilities {
+namespace NovaEngine {
     public static class MathUtils {
         public static float DegreesToRadians(float degrees) => MathF.PI / 180f * degrees;
 

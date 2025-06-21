@@ -2,7 +2,7 @@ using System.Numerics;
 using Silk.NET.Input;
 
 
-namespace Nova.Core {
+namespace NovaEngine {
     public static class Input {
         private static IKeyboard keyboard = null!;
         private static IMouse mouse = null!;

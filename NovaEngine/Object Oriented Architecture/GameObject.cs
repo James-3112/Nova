@@ -1,4 +1,4 @@
-namespace Nova.ObjectOrientedArchitecture {
+namespace NovaEngine {
     public class GameObject {
         public string name;
         public bool active = true;

@@ -1,14 +1,8 @@
 using Silk.NET.OpenGL;
 using Silk.NET.Maths;
 
-using Nova.Core;
-using Nova.Graphics;
 
-using Texture = Nova.Graphics.Texture;
-using Shader = Nova.Graphics.Shader;
-
-
-namespace Nova.ObjectOrientedArchitecture {
+namespace NovaEngine {
     public class Mesh : Component, IDisposable {
         private GL gl = Engine.gl;
 

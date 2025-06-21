@@ -1,7 +1,7 @@
 using Silk.NET.OpenGL;
 
 
-namespace Nova.Graphics {
+namespace NovaEngine {
     public class VertexArrayObject<VertexType, IndexType> : IDisposable
         where VertexType : unmanaged
         where IndexType : unmanaged

@@ -1,4 +1,4 @@
-namespace Nova.ObjectOrientedArchitecture {
+namespace NovaEngine {
     public abstract class Component {
         public GameObject gameObject = null!;
         public bool enabled = true;

@@ -1,11 +1,8 @@
 using Silk.NET.Maths;
 using System.Numerics;
 
-using Nova.Utilities;
-using Nova.ObjectOrientedArchitecture;
 
-
-namespace Nova.Core {
+namespace NovaEngine {
     public class Camera : Component {
         public float fov;
         public float nearPlaneDistance;
@@ -26,7 +23,7 @@ namespace Nova.Core {
         }
 
 
-        public void CreateMatrices(Nova.Graphics.Shader shader, Vector2D<int> size) {
+        public void CreateMatrices(Shader shader, Vector2D<int> size) {
             Matrix4x4 view = Matrix4x4.CreateLookAt(transform.position, transform.position + Vector3.Normalize(transform.rotationEulerAngles), Vector3.UnitY);
             Matrix4x4 projection = Matrix4x4.CreatePerspectiveFieldOfView(MathUtils.DegreesToRadians(fov), (float)size.X / size.Y, nearPlaneDistance, farPlaneDistance);
 

@@ -1,7 +1,7 @@
 using Silk.NET.OpenGL;
 
 
-namespace Nova.Graphics {
+namespace NovaEngine {
     public class BufferObject<DataType> : IDisposable
         where DataType : unmanaged
     {

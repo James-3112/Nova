@@ -2,7 +2,7 @@ using Silk.NET.OpenGL;
 using StbImageSharp;
 
 
-namespace Nova.Graphics {
+namespace NovaEngine {
     public unsafe class Texture : IDisposable {
         private GL gl;
         private uint handle;

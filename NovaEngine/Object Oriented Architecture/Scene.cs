@@ -1,6 +1,4 @@
-using Nova.Core;
-
-namespace Nova.ObjectOrientedArchitecture {
+namespace NovaEngine {
     public class Scene {
         public static Scene currentScene = null!;
 
