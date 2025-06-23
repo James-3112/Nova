@@ -3,14 +3,13 @@ namespace NovaEngine {
         public static Scene currentScene = null!;
 
 
-        public static void AddGameObject(Scene scene, GameObject gameObject) {
-            if (!scene.gameObjects.Contains(gameObject))
-                scene.gameObjects.Add(gameObject);
+        public static void AddGameObject(GameObject gameObject) {
+            currentScene.AddGameObject(gameObject);
         }
 
 
-        public static void RemoveGameObject(Scene scene, GameObject gameObject) {
-            scene.gameObjects.Remove(gameObject);
+        public static void RemoveGameObject(GameObject gameObject) {
+            currentScene.RemoveGameObject(gameObject);
         }
 
 
@@ -19,13 +18,25 @@ namespace NovaEngine {
         }
 
 
-        public static void LoadScene(Scene scene) {
-            currentScene = scene;
+        // public static void SaveScene(Scene scene, string filePath) {
+        //     var serializableScene = new {
+        //         gameObjects = scene.gameObjects.Select(SceneConverter.ToSerializable).ToList()
+        //     };
 
-            foreach (GameObject gameObjects in currentScene.gameObjects) {
-                gameObjects.Start();
-            }
-        }
+        //     Json.Save(serializableScene, filePath);
+        // }
+
+
+        // public static Scene LoadScene(string filePath) {
+        //     var loadedData = Json.Load<Dictionary<string, List<SerializableGameObject>>>(filePath);
+
+        //     Scene scene = new Scene();
+        //     foreach (var objData in loadedData["gameObjects"]) {
+        //         scene.AddGameObject(SceneConverter.FromSerializable(objData));
+        //     }
+
+        //     return scene;
+        // }
 
 
         public static void UnloadScene() {
@@ -43,21 +54,21 @@ namespace NovaEngine {
 
 
         // These functions are to be used within the Application class
+        public static void StartScene(Scene scene) {
+            currentScene = scene;
+            currentScene.Start();
+        }
+
+
         public static void UpdateScene(double deltaTime) {
             if (currentScene == null) return;
-
-            foreach (GameObject gameObject in currentScene.gameObjects) {
-                gameObject.Update(deltaTime);
-            }
+            currentScene.Update(deltaTime);
         }
 
 
         public static void RenderScene(double deltaTime) {
             if (currentScene == null) return;
-
-            foreach (GameObject gameObject in currentScene.gameObjects) {
-                gameObject.Render(deltaTime);
-            }
+            currentScene.Render(deltaTime);
         }
     }
 }

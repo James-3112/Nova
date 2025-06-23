@@ -3,12 +3,13 @@
 
 class Program {
     static void Main(string[] args) {
-        SceneManager.LoadScene(new Scene());
+        Scene scene = new Scene();
 
-        GameObject player = new GameObject();
-        player.AddComponent(new Player()).Start();
-        player.Update(1.0f);
+        GameObject gameObject = new GameObject("Test GameObject");
+        gameObject.AddComponent(new Player());
 
-        SceneManager.UnloadScene();
+        scene.AddGameObject(gameObject);
+
+        Application.Start(scene);
     }
 }

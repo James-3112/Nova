@@ -14,9 +14,11 @@ namespace NovaEngine {
         public static IWindow window = null!;
         public static GL gl = null!;
 
+        private static Scene startingScene = null!;
+
 
         public static void Start(Scene scene, int width = 800, int height = 600, string title = "Nova", bool vsync = false) {
-            SceneManager.LoadScene(scene);
+            startingScene = scene;
 
             WindowOptions options = WindowOptions.Default with {
                 Size = new Vector2D<int>(width, height),
@@ -58,6 +60,8 @@ namespace NovaEngine {
 
             // Enable draw by depth
             gl.Enable(EnableCap.DepthTest);
+
+            startingScene.Start();
         }
 
 

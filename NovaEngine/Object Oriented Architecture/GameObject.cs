@@ -6,11 +6,8 @@ namespace NovaEngine {
         private List<Component> components = new();
 
 
-        public GameObject(string name = "GameObject", Scene? scene = null) {
+        public GameObject(string name = "GameObject") {
             this.name = name;
-
-            if (scene == null) SceneManager.AddGameObject(SceneManager.currentScene, this);
-            else SceneManager.AddGameObject(scene, this);
         }
 
 
