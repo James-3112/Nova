@@ -36,44 +36,44 @@ namespace NovaEngine {
         }
 
 
-        private static void OnKeyDown(IKeyboard _, Key key, int scancode) {
+        private static void OnKeyDown(IKeyboard keyboard, Key key, int scancode) {
             if (!keysHeld.Contains(key)) {
                 keysPressed.Add(key);
                 keysHeld.Add(key);
             }
         }
 
-        private static void OnKeyUp(IKeyboard _, Key key, int scancode) {
+        private static void OnKeyUp(IKeyboard keyboard, Key key, int scancode) {
             keysReleased.Add(key);
             keysHeld.Remove(key);
         }
 
-        private static void OnMouseDown(IMouse _, MouseButton button) {
+        private static void OnMouseDown(IMouse keyboard, MouseButton button) {
             if (!mouseHeld.Contains(button)) {
                 mousePressed.Add(button);
                 mouseHeld.Add(button);
             }
         }
 
-        private static void OnMouseUp(IMouse _, MouseButton button) {
+        private static void OnMouseUp(IMouse keyboard, MouseButton button) {
             mouseReleased.Add(button);
             mouseHeld.Remove(button);
         }
 
-        private static void OnMouseMove(IMouse _, Vector2 position) {
+        private static void OnMouseMove(IMouse keyboard, Vector2 position) {
             mousePosition = position;
         }
 
 
-        public static bool IsKeyPressed(Key key) => keysPressed.Contains(key);
-        public static bool IsKeyReleased(Key key) => keysReleased.Contains(key);
-        public static bool IsKeyHeld(Key key) => keysHeld.Contains(key);
+        public static bool IsKeyPressed(KeyCode key) => keysPressed.Contains(KeyCodes.KeyCodeToKey(key));
+        public static bool IsKeyReleased(KeyCode key) => keysReleased.Contains(KeyCodes.KeyCodeToKey(key));
+        public static bool IsKeyHeld(KeyCode key) => keysHeld.Contains(KeyCodes.KeyCodeToKey(key));
 
-        public static bool IsMouseButtonPressed(MouseButton button) => mousePressed.Contains(button);
-        public static bool IsMouseButtonReleased(MouseButton button) => mouseReleased.Contains(button);
-        public static bool IsMouseButtonHeld(MouseButton button) => mouseHeld.Contains(button);
+        public static bool IsMouseButtonPressed(KeyCode button) => mousePressed.Contains(KeyCodes.KeyCodeToMouseButton(button));
+        public static bool IsMouseButtonReleased(KeyCode button) => mouseReleased.Contains(KeyCodes.KeyCodeToMouseButton(button));
+        public static bool IsMouseButtonHeld(KeyCode button) => mouseHeld.Contains(KeyCodes.KeyCodeToMouseButton(button));
 
-        public static void SetMouseMode(CursorMode cursorMode) => mouse.Cursor.CursorMode = cursorMode;
+        public static void SetMouseMode(MouseMode mouseMode) => mouse.Cursor.CursorMode = MouseModes.MouseModeToCursorMode(mouseMode);
 
 
         public static void Update() {
