@@ -16,14 +16,11 @@ namespace NovaEngine {
         public static IWindow window = null!;
         public static GL gl = null!;
 
-        private static IOverlayLayer? overlayLayer;
-
         private static Scene startingScene = null!;
 
 
-        public static void Start(Scene scene, int width = 800, int height = 600, string title = "Nova", bool vsync = false, IOverlayLayer? overlay = null) {
+        public static void Start(Scene scene, int width = 800, int height = 600, string title = "Nova", bool vsync = false) {
             startingScene = scene;
-            overlayLayer = overlay;
 
             WindowOptions options = WindowOptions.Default with {
                 Size = new Vector2D<int>(width, height),
@@ -66,9 +63,6 @@ namespace NovaEngine {
             // Enable draw by depth
             gl.Enable(EnableCap.DepthTest);
 
-            // ImGui
-            overlayLayer?.Load(gl, window, input);
-
             startingScene.Start();
         }
 
@@ -83,7 +77,6 @@ namespace NovaEngine {
             gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
 
             SceneManager.RenderScene(deltaTime);
-            overlayLayer?.Render(gl, deltaTime);
         }
 
 
@@ -94,7 +87,6 @@ namespace NovaEngine {
 
         private static void OnClose() {
             SceneManager.UnloadScene();
-            overlayLayer?.Dispose();
         }
     }
 }
