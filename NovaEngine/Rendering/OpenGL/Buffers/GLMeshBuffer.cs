@@ -3,15 +3,11 @@ using Silk.NET.OpenGL;
 
 namespace NovaEngine {
     public class GLMeshBuffer : MeshBuffer {
-        private GL gl;
-
-        private BufferObject<float> vbo;
-        private BufferObject<uint> ebo;
-        private VertexArrayObject<float, uint> vao;
+        public BufferObject<float> vbo;
+        public BufferObject<uint> ebo;
+        public VertexArrayObject<float, uint> vao;
 
         public GLMeshBuffer(GL gl, float[] vertices, uint[] indices) {
-            this.gl = gl;
-
             vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
             ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
             vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);

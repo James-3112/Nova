@@ -1,6 +1,5 @@
-
 namespace NovaEngine {
     public interface TextureBuffer : IDisposable {
-        public void Bind();
+        public void Bind(int textureSlot = 0);
     }
 }

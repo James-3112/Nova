@@ -1,25 +1,64 @@
+using Silk.NET.Windowing;
 
 
 namespace NovaEngine {
     public class RendererLayer : Layer {
-        private Renderer renderer;
+        public enum Backend {OpenGL, DirectX, Vulkan}
+        private static Backend backend;
 
-        public RendererLayer(Renderer renderer) {
-            this.renderer = renderer;
-            renderer.Initialize();
+        private Renderer renderer = null!;
+
+
+        public RendererLayer(Backend backend, IWindow window) {
+            switch (backend) {
+                case Backend.OpenGL:
+                    renderer = new GLRenderer();
+                    break;
+                case Backend.DirectX:
+                    Debug.LogError("DirectX is not support yet");
+                    break;
+                case Backend.Vulkan:
+                    Debug.LogError("Vulkan is not support yet");
+                    break;
+                default:
+                    Debug.LogError("Failed to find backend");
+                    break;
+            }
+
+            renderer.Initialize(window);
         }
+
 
         public override void OnUpdate(float dt) {
             foreach (GameObject gameObject in SceneManager.currentScene.gameObjects) {
                 // Chech if it has a mesh render component and then render the game object
 
+                MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
+                if (meshRenderer == null) return;
+
                 Mesh mesh = gameObject.GetComponent<Mesh>();
-                renderer.DrawMesh(mesh, mesh.shader);
+                Transform transform = gameObject.GetComponent<Transform>();
+
+                renderer.DrawMesh(mesh, meshRenderer.shader, meshRenderer.texture, transform.matrix);
             }
         }
 
         public override void Dispose() {
             renderer.Dispose();
+        }
+
+        public static MeshBuffer CreateMeshBuffer(float[] vertices, uint[] indices) {
+            return backend switch {
+                Backend.OpenGL => new GLMeshBuffer(Application.gl, vertices, indices),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        public static ShaderBuffer CreateShaderBuffer(string vertexPath, string fragmentPath) {
+            return backend switch {
+                Backend.OpenGL => new GLShaderBuffer(Application.gl, vertexPath, fragmentPath),
+                _ => throw new NotImplementedException()
+            };
         }
     }
 }
