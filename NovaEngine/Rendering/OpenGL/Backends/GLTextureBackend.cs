@@ -3,12 +3,12 @@ using StbImageSharp;
 
 
 namespace NovaEngine {
-    public class GLTextureBuffer : TextureBuffer {
+    public class GLTextureBackend : TextureBackend {
         private GL gl;
         private uint handle;
 
 
-        public unsafe GLTextureBuffer(GL gl, string path) {
+        public unsafe GLTextureBackend(GL gl, string path) {
             this.gl = gl;
             handle = gl.GenTexture();
             Bind();

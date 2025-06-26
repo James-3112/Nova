@@ -1,9 +1,9 @@
 namespace NovaEngine {
     public class Texture {
-        public TextureBuffer buffer;
+        public TextureBackend backend;
 
-        public Texture(TextureBuffer buffer) {
-            this.buffer = buffer;
+        public Texture(TextureBackend backend) {
+            this.backend = backend;
         }
     }
 }

@@ -1,9 +1,9 @@
 namespace NovaEngine {
     public class Mesh : Component {
-        public MeshBuffer buffer;
+        public MeshBackend backend;
 
-        public Mesh(MeshBuffer buffer) {
-            this.buffer = buffer;
+        public Mesh(MeshBackend backend) {
+            this.backend = backend;
         }
     }
 }

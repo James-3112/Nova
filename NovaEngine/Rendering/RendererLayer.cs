@@ -21,7 +21,7 @@ namespace NovaEngine {
                     Debug.LogError("Vulkan is not support yet");
                     break;
                 default:
-                    Debug.LogError("Failed to find backend");
+                    Debug.LogError("Failed to load backend");
                     break;
             }
 
@@ -43,20 +43,31 @@ namespace NovaEngine {
             }
         }
 
+
         public override void Dispose() {
             renderer.Dispose();
         }
 
-        public static MeshBuffer CreateMeshBuffer(float[] vertices, uint[] indices) {
+
+        public static MeshBackend CreateMeshBackend(float[] vertices, uint[] indices) {
             return backend switch {
-                Backend.OpenGL => new GLMeshBuffer(Application.gl, vertices, indices),
+                Backend.OpenGL => new GLMeshBackend(Application.gl, vertices, indices),
                 _ => throw new NotImplementedException()
             };
         }
 
-        public static ShaderBuffer CreateShaderBuffer(string vertexPath, string fragmentPath) {
+
+        public static ShaderBackend CreateShaderBackend(string vertexPath, string fragmentPath) {
             return backend switch {
-                Backend.OpenGL => new GLShaderBuffer(Application.gl, vertexPath, fragmentPath),
+                Backend.OpenGL => new GLShaderBackend(Application.gl, vertexPath, fragmentPath),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+
+        public static TextureBackend CreateTextureBackend(string path) {
+            return backend switch {
+                Backend.OpenGL => new GLTextureBackend(Application.gl, path),
                 _ => throw new NotImplementedException()
             };
         }

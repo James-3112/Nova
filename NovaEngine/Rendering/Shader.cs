@@ -1,9 +1,9 @@
 namespace NovaEngine {
     public class Shader {
-        public ShaderBuffer buffer;
+        public ShaderBackend backend;
 
-        public Shader(ShaderBuffer buffer) {
-            this.buffer = buffer;
+        public Shader(ShaderBackend backend) {
+            this.backend = backend;
         }
     }
 }

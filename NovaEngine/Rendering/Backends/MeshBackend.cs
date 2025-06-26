@@ -1,5 +1,5 @@
 namespace NovaEngine {
-    public interface MeshBuffer : IDisposable {
+    public interface MeshBackend : IDisposable {
         public void Bind();
     }
 }

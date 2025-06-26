@@ -2,7 +2,7 @@ using System.Numerics;
 
 
 namespace NovaEngine {
-    public interface ShaderBuffer : IDisposable {
+    public interface ShaderBackend : IDisposable {
         public void Use();
         public void SetUniform(string name, int value);
         public void SetUniform(string name, float value);

@@ -3,12 +3,12 @@ using Silk.NET.OpenGL;
 
 
 namespace NovaEngine {
-    public class GLShaderBuffer : ShaderBuffer {
+    public class GLShaderBackend : ShaderBackend {
         private GL gl;
         private uint handle;
 
 
-        public GLShaderBuffer(GL gl, string vertexPath, string fragmentPath) {
+        public GLShaderBackend(GL gl, string vertexPath, string fragmentPath) {
             this.gl = gl;
 
             // Load the shaders
