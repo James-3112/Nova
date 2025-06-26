@@ -30,9 +30,9 @@ namespace NovaEngine {
 
 
         public override void OnUpdate(float dt) {
-            foreach (GameObject gameObject in SceneManager.currentScene.gameObjects) {
-                // Chech if it has a mesh render component and then render the game object
+            renderer.Clear();
 
+            foreach (GameObject gameObject in SceneManager.currentScene.gameObjects) {
                 MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
                 if (meshRenderer == null) return;
 
@@ -44,9 +44,7 @@ namespace NovaEngine {
         }
 
 
-        public override void Dispose() {
-            renderer.Dispose();
-        }
+        public override void Dispose() {}
 
 
         public static MeshBackend CreateMeshBackend(float[] vertices, uint[] indices) {

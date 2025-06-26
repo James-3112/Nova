@@ -1,4 +1,6 @@
+using System.Drawing;
 using System.Numerics;
+using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 
@@ -7,14 +9,37 @@ namespace NovaEngine {
     public class GLRenderer : Renderer {
         private GL gl = null!;
 
+
         public override void Initialize(IWindow window) {
             gl = window.CreateOpenGL();
+            gl.ClearColor(Color.Black);
+
+            // Enable blending for textures transpanrency and set the blend to use the alpha to subtract
+            gl.Enable(EnableCap.Blend);
+            gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+
+            // Enable backface culling
+            gl.Enable(GLEnum.CullFace);
+
+            // Enable draw by depth
+            gl.Enable(EnableCap.DepthTest);
         }
 
-        public override void Dispose() {}
 
-        public override void Clear(float r, float g, float b, float a) {}
-        public override void ResizeWindow(int width, int height) {}
+        public override void Clear() {
+            gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+        }
+
+
+        public override void ResizeWindow(int width, int height) {
+            gl.Viewport(new Vector2D<int>(width, height));
+        }
+
+
+        public override void ResizeWindow(Vector2 size) {
+            ResizeWindow((int)size.X, (int)size.Y);
+        }
+
 
         public override void DrawMesh(Mesh mesh, Shader shader, Texture texture, Matrix4x4 modelMatrix) {
             mesh.backend.Bind();

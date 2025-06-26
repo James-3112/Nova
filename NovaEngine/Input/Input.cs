@@ -22,7 +22,7 @@ namespace NovaEngine {
 
 
         public static void Initialize(IKeyboard keyboard, IMouse mouse) {
-            Input.keyboard = keyboard;
+            Input.keyboard = keyboard; // Don't need to save keyboard
             Input.mouse = mouse;
 
             keyboard.KeyDown += OnKeyDown;
