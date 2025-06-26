@@ -46,7 +46,7 @@ namespace NovaEngine {
 
 
         private static void OnLoad() {
-            IInputContext input = window.CreateInput();
+            IInputContext input = window.CreateInput(); // Need to Dispose ----------------------------------------------------------------
             Input.Initialize(input.Keyboards.FirstOrDefault()!, input.Mice.FirstOrDefault()!);
 
             // OpenGL Init

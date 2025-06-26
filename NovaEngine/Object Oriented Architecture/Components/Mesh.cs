@@ -15,8 +15,8 @@ namespace NovaEngine {
 
 
         public Mesh(float[] vertices, uint[] indices, string vertexPath, string fragmentPath, string texturePath) {
-            ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
             vbo = new BufferObject<float>(gl, vertices, BufferTargetARB.ArrayBuffer);
+            ebo = new BufferObject<uint>(gl, indices, BufferTargetARB.ElementArrayBuffer);
             vao = new VertexArrayObject<float, uint>(gl, vbo, ebo);
 
             // Telling the VAO object how to lay out the attribute pointers
