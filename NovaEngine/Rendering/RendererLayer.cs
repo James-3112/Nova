@@ -6,13 +6,13 @@ namespace NovaEngine {
         public enum Backend {OpenGL, DirectX, Vulkan}
         private static Backend backend;
 
-        private Renderer renderer = null!;
+        private static Renderer renderer = null!;
 
 
         public RendererLayer(Backend backend, IWindow window) {
             switch (backend) {
                 case Backend.OpenGL:
-                    renderer = new GLRenderer();
+                    renderer = new GLRenderer(window);
                     break;
                 case Backend.DirectX:
                     Debug.LogError("DirectX is not support yet");
@@ -24,12 +24,10 @@ namespace NovaEngine {
                     Debug.LogError("Failed to load backend");
                     break;
             }
-
-            renderer.Initialize(window);
         }
 
 
-        public override void OnUpdate(float dt) {
+        public override void Update(double deltaTime) {
             renderer.Clear();
 
             foreach (GameObject gameObject in SceneManager.currentScene.gameObjects) {
@@ -49,7 +47,7 @@ namespace NovaEngine {
 
         public static MeshBackend CreateMeshBackend(float[] vertices, uint[] indices) {
             return backend switch {
-                Backend.OpenGL => new GLMeshBackend(Application.gl, vertices, indices),
+                Backend.OpenGL => renderer.CreateMeshBackend(vertices, indices),
                 _ => throw new NotImplementedException()
             };
         }
@@ -57,7 +55,7 @@ namespace NovaEngine {
 
         public static ShaderBackend CreateShaderBackend(string vertexPath, string fragmentPath) {
             return backend switch {
-                Backend.OpenGL => new GLShaderBackend(Application.gl, vertexPath, fragmentPath),
+                Backend.OpenGL => renderer.CreateShaderBackend(vertexPath, fragmentPath),
                 _ => throw new NotImplementedException()
             };
         }
@@ -65,7 +63,7 @@ namespace NovaEngine {
 
         public static TextureBackend CreateTextureBackend(string path) {
             return backend switch {
-                Backend.OpenGL => new GLTextureBackend(Application.gl, path),
+                Backend.OpenGL => renderer.CreateTextureBackend(path),
                 _ => throw new NotImplementedException()
             };
         }

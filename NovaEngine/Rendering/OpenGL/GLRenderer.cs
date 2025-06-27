@@ -10,7 +10,7 @@ namespace NovaEngine {
         private GL gl = null!;
 
 
-        public override void Initialize(IWindow window) {
+        public GLRenderer(IWindow window) {
             gl = window.CreateOpenGL();
             gl.ClearColor(Color.Black);
 
@@ -49,10 +49,25 @@ namespace NovaEngine {
             shader.backend.SetUniform("uTexture", 0);
             
             shader.backend.SetUniform("uModel", modelMatrix);
-            SceneManager.currentScene.mainCamera.CreateMatrices(shader, Application.window.FramebufferSize);
+            SceneManager.currentScene.mainCamera.CreateMatrices(shader, Application.window.silkWindow.FramebufferSize);
             
             // Need to change to base on the number of vertices and indices
             gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+        }
+
+
+        public override MeshBackend CreateMeshBackend(float[] vertices, uint[] indices) {
+            return new GLMeshBackend(gl, vertices, indices);
+        }
+
+
+        public override ShaderBackend CreateShaderBackend(string vertexPath, string fragmentPath) {
+            return new GLShaderBackend(gl, vertexPath, fragmentPath);
+        }
+
+
+        public override TextureBackend CreateTextureBackend(string path) {
+            return new GLTextureBackend(gl, path);
         }
     }
 }

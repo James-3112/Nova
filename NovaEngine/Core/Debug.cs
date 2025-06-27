@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 
+
 namespace NovaEngine {
     public static class Debug {
         public static void LogInfo(string message,

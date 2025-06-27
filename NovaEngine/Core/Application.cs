@@ -12,31 +12,21 @@ using ImGuiNET;
 
 
 namespace NovaEngine {
-    public static class Application {
-        public static IWindow window = null!;
-        public static GL gl = null!;
+    public class Application {
+        public static Window window = null!;
 
-        private static Scene startingScene = null!;
+        private List<Layer> layers = new List<Layer>();
+        private List<Func<IWindow, Layer>> layerConstructors = new List<Func<IWindow, Layer>>();
 
 
-        public static void Start(Scene scene, int width = 800, int height = 600, string title = "Nova", bool vsync = false) {
-            startingScene = scene;
+        public void Start() {
+            window = new Window();
+            window.silkWindow.Load += OnLoad;
+            window.silkWindow.Update += OnUpdate;
+            window.silkWindow.FramebufferResize += OnFramebufferResize;
+            window.silkWindow.Closing += OnClose;
 
-            WindowOptions options = WindowOptions.Default with {
-                Size = new Vector2D<int>(width, height),
-                Title = title,
-                VSync = vsync
-            };
-
-            window = Window.Create(options);
-            window.Load += OnLoad;
-            window.Update += OnUpdate;
-            window.Render += OnRender;
-            window.FramebufferResize += OnFramebufferResize;
-            window.Closing += OnClose;
-
-            window.Run();
-            window.Dispose();
+            window.Start();
         }
 
 
@@ -45,48 +35,37 @@ namespace NovaEngine {
         }
 
 
-        private static void OnLoad() {
-            IInputContext input = window.CreateInput(); // Need to Dispose ----------------------------------------------------------------
-            Input.Initialize(input.Keyboards.FirstOrDefault()!, input.Mice.FirstOrDefault()!);
-
-            // OpenGL Init
-            gl = window.CreateOpenGL();
-            gl.ClearColor(Color.Black);
-
-            // Enable blending for textures and set the blend to use the alpha to subtract
-            gl.Enable(EnableCap.Blend);
-            gl.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
-
-            // Enable backface culling
-            gl.Enable(GLEnum.CullFace);
-
-            // Enable draw by depth
-            gl.Enable(EnableCap.DepthTest);
-
-            startingScene.Start();
+        public void AddLayer(Func<IWindow, Layer> constructor) {
+            layerConstructors.Add(constructor);
         }
 
 
-        private static void OnUpdate(double deltaTime) {
-            SceneManager.UpdateScene(deltaTime);
-            Input.Update();
+        private void OnLoad() {
+            foreach (Func<IWindow, Layer> constructor in layerConstructors) {
+                Layer layer = constructor(window.silkWindow);
+
+                layers.Add(layer);
+                layer.Start();
+            }
         }
 
 
-        private static void OnRender(double deltaTime) {
-            gl.Clear((uint) (ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit));
+        private void OnUpdate(double deltaTime) {
+            foreach (Layer layer in layers) {
+                layer.Update(deltaTime);
+            }
+        }
+        
 
-            SceneManager.RenderScene(deltaTime);
+        private void OnFramebufferResize(Vector2D<int> newSize) {
+            
         }
 
 
-        private static void OnFramebufferResize(Vector2D<int> newSize) {
-            gl.Viewport(newSize);
-        }
-
-
-        private static void OnClose() {
-            SceneManager.UnloadScene();
+        private void OnClose() {
+            foreach (Layer layer in layers) {
+                layer.Dispose();
+            }
         }
     }
 }
