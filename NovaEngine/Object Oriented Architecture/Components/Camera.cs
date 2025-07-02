@@ -1,4 +1,3 @@
-using Silk.NET.Maths;
 using System.Numerics;
 
 
@@ -23,12 +22,12 @@ namespace NovaEngine {
         }
 
 
-        public void CreateMatrices(Shader shader, Vector2D<int> size) {
+        public void CreateMatrices(Shader shader, Vector2 size) {
             Matrix4x4 view = Matrix4x4.CreateLookAt(transform.position, transform.position + Vector3.Normalize(transform.rotationEulerAngles), Vector3.UnitY);
-            Matrix4x4 projection = Matrix4x4.CreatePerspectiveFieldOfView(MathUtils.DegreesToRadians(fov), (float)size.X / size.Y, nearPlaneDistance, farPlaneDistance);
+            Matrix4x4 projection = Matrix4x4.CreatePerspectiveFieldOfView(MathUtils.DegreesToRadians(fov), size.X / size.Y, nearPlaneDistance, farPlaneDistance);
 
-            shader.SetUniform("uView", view);
-            shader.SetUniform("uProjection", projection);
+            shader.backend.SetUniform("uView", view);
+            shader.backend.SetUniform("uProjection", projection);
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Drawing;
 using StbImageSharp;
 using Silk.NET.OpenGL.Extensions.ImGui;
 using ImGuiNET;
+using System.Reflection;
 
 
 namespace NovaEngine {
@@ -35,15 +36,39 @@ namespace NovaEngine {
         }
 
 
-        public void AddLayer(Func<IWindow, Layer> constructor) {
-            layerConstructors.Add(constructor);
+        public void AddLayer<T>(params object[] dependencies) where T : Layer {
+            Type layerType = typeof(T);
+
+            if (!typeof(Layer).IsAssignableFrom(layerType)) {
+                Debug.LogError($"Type must be a subclass of Layer. Got: {layerType.FullName}");
+            }
+
+            layerConstructors.Add(_ => {
+                List<object> availableDeps = dependencies.ToList();
+                availableDeps.Add(window.silkWindow);
+
+                var constructor = layerType.GetConstructors()
+                    .FirstOrDefault(ctor => {
+                        var parameters = ctor.GetParameters();
+                        return parameters.All(param => availableDeps.Any(dep => param.ParameterType.IsInstanceOfType(dep)));
+                    });
+
+                if (constructor != null) {
+                    var args = constructor.GetParameters()
+                        .Select(param => availableDeps.First(dep => param.ParameterType.IsInstanceOfType(dep)))
+                        .ToArray();
+                    return (Layer)constructor.Invoke(args);
+                }
+
+                Debug.LogError($"No suitable constructor found for {layerType.Name}");
+                return null!;
+            });
         }
 
 
         private void OnLoad() {
             foreach (Func<IWindow, Layer> constructor in layerConstructors) {
                 Layer layer = constructor(window.silkWindow);
-
                 layers.Add(layer);
                 layer.Start();
             }

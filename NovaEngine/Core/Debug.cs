@@ -39,6 +39,8 @@ namespace NovaEngine {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"[Error] {className}.{memberName} (Line {lineNumber}): {message}");
             Console.ResetColor();
+
+            Environment.Exit(1);
         }
     }
 }
