@@ -14,24 +14,31 @@ using System.Reflection;
 
 namespace NovaEngine {
     public class Application {
-        public static Window window = null!;
+        public static Application Instance { get; private set; } = null!;
+
+        private Window window = null!;
 
         private List<Layer> layers = new List<Layer>();
         private List<Func<IWindow, Layer>> layerConstructors = new List<Func<IWindow, Layer>>();
 
 
+        public Application() {
+            Instance = this;
+        }
+
+
         public void Start() {
             window = new Window();
-            window.silkWindow.Load += OnLoad;
-            window.silkWindow.Update += OnUpdate;
-            window.silkWindow.FramebufferResize += OnFramebufferResize;
-            window.silkWindow.Closing += OnClose;
+            window.silkWindow.Load += Load;
+            window.silkWindow.Update += Update;
+            window.silkWindow.FramebufferResize += FramebufferResize;
+            window.silkWindow.Closing += Close;
 
             window.Start();
         }
 
 
-        public static void Quit() {
+        public void Quit() {
             window.Close();
         }
 
@@ -43,30 +50,62 @@ namespace NovaEngine {
                 Debug.LogError($"Type must be a subclass of Layer. Got: {layerType.FullName}");
             }
 
-            layerConstructors.Add(_ => {
-                List<object> availableDeps = dependencies.ToList();
-                availableDeps.Add(window.silkWindow);
-
-                var constructor = layerType.GetConstructors()
-                    .FirstOrDefault(ctor => {
-                        var parameters = ctor.GetParameters();
-                        return parameters.All(param => availableDeps.Any(dep => param.ParameterType.IsInstanceOfType(dep)));
-                    });
-
-                if (constructor != null) {
-                    var args = constructor.GetParameters()
-                        .Select(param => availableDeps.First(dep => param.ParameterType.IsInstanceOfType(dep)))
-                        .ToArray();
-                    return (Layer)constructor.Invoke(args);
-                }
-
-                Debug.LogError($"No suitable constructor found for {layerType.Name}");
-                return null!;
-            });
+            layerConstructors.Add(_ => CreateLayerInstance(layerType, dependencies));
         }
 
 
-        private void OnLoad() {
+        public Layer AddAndStartLayer<T>(params object[] dependencies) where T : Layer {
+            Type layerType = typeof(T);
+
+            if (!typeof(Layer).IsAssignableFrom(layerType)) {
+                Debug.LogError($"Type must be a subclass of Layer. Got: {layerType.FullName}");
+            }
+
+            Layer layer = CreateLayerInstance(layerType, dependencies);
+            layers.Add(layer);
+            layer.Start();
+
+            return layer;
+        }
+
+
+        private Layer CreateLayerInstance(Type layerType, object[] dependencies) {
+            List<object> availableDeps = dependencies.ToList();
+            
+            if (window != null && window.silkWindow != null) {
+                availableDeps.Add(window.silkWindow);
+            }
+
+            var constructor = layerType.GetConstructors()
+                .FirstOrDefault(ctor => {
+                    var parameters = ctor.GetParameters();
+                    return parameters.All(param => availableDeps.Any(dep => param.ParameterType.IsInstanceOfType(dep)));
+                });
+
+            if (constructor != null) {
+                var args = constructor.GetParameters()
+                    .Select(param => availableDeps.First(dep => param.ParameterType.IsInstanceOfType(dep)))
+                    .ToArray();
+                return (Layer)constructor.Invoke(args);
+            }
+
+            Debug.LogError($"No suitable constructor found for {layerType.Name}");
+            return null!;
+        }
+
+
+        public void RemoveLayer(Layer layer) {
+            if (!layers.Contains(layer)) {
+                Debug.LogWarn($"Tried to remove layer {layer.GetType().Name}, but it was not found.");
+                return;
+            }
+
+            layer.Dispose();
+            layers.Remove(layer);
+        }
+
+
+        private void Load() {
             foreach (Func<IWindow, Layer> constructor in layerConstructors) {
                 Layer layer = constructor(window.silkWindow);
                 layers.Add(layer);
@@ -75,19 +114,19 @@ namespace NovaEngine {
         }
 
 
-        private void OnUpdate(double deltaTime) {
+        private void Update(double deltaTime) {
             foreach (Layer layer in layers) {
                 layer.Update(deltaTime);
             }
         }
         
 
-        private void OnFramebufferResize(Vector2D<int> newSize) {
+        private void FramebufferResize(Vector2D<int> newSize) {
             
         }
 
 
-        private void OnClose() {
+        private void Close() {
             foreach (Layer layer in layers) {
                 layer.Dispose();
             }

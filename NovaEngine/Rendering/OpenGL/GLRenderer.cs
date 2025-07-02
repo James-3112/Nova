@@ -8,10 +8,13 @@ using Silk.NET.Windowing;
 namespace NovaEngine {
     public class GLRenderer : Renderer {
         private GL gl = null!;
+        private IWindow window = null!;
 
 
         public GLRenderer(IWindow window) {
+            this.window = window;
             gl = window.CreateOpenGL();
+
             gl.ClearColor(Color.Black);
 
             // Enable blending for textures transpanrency and set the blend to use the alpha to subtract
@@ -49,7 +52,7 @@ namespace NovaEngine {
             shader.backend.SetUniform("uTexture", 0);
             
             shader.backend.SetUniform("uModel", modelMatrix);
-            SceneManager.currentScene.mainCamera.CreateMatrices(shader, new Vector2(Application.window.silkWindow.FramebufferSize.X, Application.window.silkWindow.FramebufferSize.Y));
+            SceneManager.currentSceneLayer?.scene.mainCamera.CreateMatrices(shader, new Vector2(window.FramebufferSize.X, window.FramebufferSize.Y));
             
             // Need to change to base on the number of vertices and indices
             gl.DrawArrays(PrimitiveType.Triangles, 0, 36);

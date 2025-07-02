@@ -30,7 +30,9 @@ namespace NovaEngine {
         public override void Update(double deltaTime) {
             renderer.Clear();
 
-            foreach (GameObject gameObject in SceneManager.currentScene.gameObjects) {
+            if (SceneManager.currentSceneLayer?.scene.gameObjects == null) return;
+
+            foreach (GameObject gameObject in SceneManager.currentSceneLayer.scene.gameObjects) {
                 MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
                 if (meshRenderer == null) return;
 
