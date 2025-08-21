@@ -1,28 +1,33 @@
 namespace NovaEngine {
     public static class SceneManager {
-        public static SceneLayer? currentSceneLayer { get; private set; }
+        public static SceneLayer? sceneLayer { get; private set; }
 
-        public static void LoadScene(Scene scene) {
-            // Unload current scene if it exists
-            if (currentSceneLayer != null) {
-                Application.Instance.RemoveLayer(currentSceneLayer);
-                currentSceneLayer.Dispose();
-                currentSceneLayer = null;
-            }
 
-            // Add and start new scene layer
-            currentSceneLayer = (SceneLayer)Application.Instance.AddAndStartLayer<SceneLayer>(scene);
+        public static void Initialize(SceneLayer sceneLayer) {
+            SceneManager.sceneLayer = sceneLayer;
         }
 
-        public static void UnloadScene() {
-            if (currentSceneLayer == null) {
-                Debug.LogWarn("Tried to unload a scene, but no scene is currently loaded.");
+
+        public static void LoadScene(Scene scene) {
+            if (sceneLayer == null) {
+                Debug.LogError("SceneLayer has not been initialized");
                 return;
             }
 
-            Application.Instance.RemoveLayer(currentSceneLayer);
-            currentSceneLayer.Dispose();
-            currentSceneLayer = null;
+            sceneLayer.scene?.Dispose(); // Dispose current scene
+            sceneLayer.scene = scene;
+            scene.Start();
+        }
+
+
+        public static void UnloadScene() {
+            if (sceneLayer == null) {
+                Debug.LogWarn("Tried to unload a scene, but no scene is currently loaded");
+                return;
+            }
+
+            sceneLayer.scene.Dispose();
+            sceneLayer.scene = null!;
         }
     }
 }

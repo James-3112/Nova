@@ -1,13 +1,16 @@
 namespace NovaEngine {
     public class Texture {
-        public TextureBackend backend;
+        public TextureBackend backend = null!;
+        private string path = null!;
+
 
         public Texture(string path) {
-            backend = RendererLayer.CreateTextureBackend(path);
+            this.path = path;
         }
 
-        public Texture(TextureBackend backend) {
-            this.backend = backend;
+
+        public void Initialize() {
+            backend = RendererLayer.CreateTextureBackend(path);
         }
     }
 }

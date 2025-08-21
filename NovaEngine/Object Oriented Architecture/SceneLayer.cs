@@ -1,26 +1,20 @@
 namespace NovaEngine {
     public class SceneLayer : Layer {
-        public Scene scene;
-
-
-        public SceneLayer(Scene scene) {
-            this.scene = scene;
-        }
+        public Scene scene = null!;
 
 
         public override void Start() {
-            scene.Start();
+            SceneManager.Initialize(this);
         }
 
 
         public override void Update(double deltaTime) {
             scene.Update(deltaTime);
-            scene.Render(deltaTime);
         }
 
 
         public override void Dispose() {
-            scene.Unload();
+            scene.Dispose();
         }
     }
 }

@@ -6,6 +6,5 @@ namespace NovaEngine {
         public virtual void OnAdd() {}
         public virtual void Start() {}
         public virtual void Update(double deltaTime) {}
-        public virtual void Render(double deltaTime) {}
     }
 }

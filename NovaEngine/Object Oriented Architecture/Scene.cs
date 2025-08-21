@@ -28,14 +28,7 @@ namespace NovaEngine {
         }
 
 
-        public void Render(double deltaTime) {
-            foreach (GameObject gameObject in gameObjects) {
-                gameObject.Render(deltaTime);
-            }
-        }
-
-
-        public void Unload() {
+        public void Dispose() {
             foreach (GameObject gameObject in gameObjects) {
                 gameObject.Dispose();
             }

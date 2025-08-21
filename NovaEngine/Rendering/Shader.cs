@@ -1,13 +1,18 @@
 namespace NovaEngine {
     public class Shader {
-        public ShaderBackend backend;
+        public ShaderBackend backend = null!;
+        private string vertexPath = null!;
+        private string fragmentPath = null!;
+        
         
         public Shader(string vertexPath, string fragmentPath) {
-            backend = RendererLayer.CreateShaderBackend(vertexPath, fragmentPath);
+            this.vertexPath = vertexPath;
+            this.fragmentPath = fragmentPath;
         }
 
-        public Shader(ShaderBackend backend) {
-            this.backend = backend;
+
+        public void Initialize() {
+            backend = RendererLayer.CreateShaderBackend(vertexPath, fragmentPath);
         }
     }
 }

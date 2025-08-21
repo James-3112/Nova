@@ -11,5 +11,10 @@ namespace NovaEngine {
             this.shader = shader;
             this.texture = texture;
         }
+
+        public override void Start() {
+            shader.Initialize();
+            texture.Initialize();
+        }
     }
 }

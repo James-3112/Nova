@@ -42,15 +42,6 @@ namespace NovaEngine {
         }
 
 
-        public void Render(double deltaTime) {
-            if (!active) return;
-
-            foreach (Component component in components) {
-                if (component.enabled) component.Render(deltaTime);
-            }
-        }
-
-
         public void Dispose() {
             foreach (Component component in components) {
                 if (component is IDisposable disposable)

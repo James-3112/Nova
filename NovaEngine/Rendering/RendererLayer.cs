@@ -27,14 +27,19 @@ namespace NovaEngine {
         }
 
 
+        public override void Start() {
+            if (SceneManager.sceneLayer?.scene.mainCamera == null) Debug.LogWarn("No main camera selected within the current scene");
+        }
+
+
         public override void Update(double deltaTime) {
             renderer.Clear();
 
-            if (SceneManager.currentSceneLayer?.scene.gameObjects == null) return;
+            if (SceneManager.sceneLayer?.scene.gameObjects == null) return;
 
-            foreach (GameObject gameObject in SceneManager.currentSceneLayer.scene.gameObjects) {
+            foreach (GameObject gameObject in SceneManager.sceneLayer.scene.gameObjects) {
                 MeshRenderer meshRenderer = gameObject.GetComponent<MeshRenderer>();
-                if (meshRenderer == null) return;
+                if (meshRenderer == null) continue;
 
                 Mesh mesh = gameObject.GetComponent<Mesh>();
                 Transform transform = gameObject.GetComponent<Transform>();

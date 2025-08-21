@@ -18,7 +18,7 @@ namespace NovaEngine {
 
         private Window window = null!;
 
-        private List<Layer> layers = new List<Layer>();
+        private Dictionary<Type, Layer> layers = new();
         private List<Func<IWindow, Layer>> layerConstructors = new List<Func<IWindow, Layer>>();
 
 
@@ -62,7 +62,7 @@ namespace NovaEngine {
             }
 
             Layer layer = CreateLayerInstance(layerType, dependencies);
-            layers.Add(layer);
+            layers[layer.GetType()] = layer;
             layer.Start();
 
             return layer;
@@ -95,27 +95,38 @@ namespace NovaEngine {
 
 
         public void RemoveLayer(Layer layer) {
-            if (!layers.Contains(layer)) {
-                Debug.LogWarn($"Tried to remove layer {layer.GetType().Name}, but it was not found.");
+            if (!layers.ContainsKey(layer.GetType())) {
+                Debug.LogWarn($"Tried to remove layer {layer.GetType().Name}, but it was not found");
                 return;
             }
 
             layer.Dispose();
-            layers.Remove(layer);
+            layers.Remove(layer.GetType());
+        }
+
+
+        public T GetLayer<T>() where T : Layer {
+            if (layers.TryGetValue(typeof(T), out Layer? layer)) return (T)layer;
+
+            Debug.LogWarn($"Layer of type {typeof(T).Name} not found.");
+            return null!;
         }
 
 
         private void Load() {
             foreach (Func<IWindow, Layer> constructor in layerConstructors) {
                 Layer layer = constructor(window.silkWindow);
-                layers.Add(layer);
+                layers[layer.GetType()] = layer;
+            }
+
+            foreach (Layer layer in layers.Values) {
                 layer.Start();
             }
         }
 
 
         private void Update(double deltaTime) {
-            foreach (Layer layer in layers) {
+            foreach (Layer layer in layers.Values) {
                 layer.Update(deltaTime);
             }
         }
@@ -127,7 +138,7 @@ namespace NovaEngine {
 
 
         private void Close() {
-            foreach (Layer layer in layers) {
+            foreach (Layer layer in layers.Values) {
                 layer.Dispose();
             }
         }

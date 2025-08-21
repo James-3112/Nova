@@ -15,7 +15,7 @@ namespace NovaEngine {
             this.window = window;
             gl = window.CreateOpenGL();
 
-            gl.ClearColor(Color.Black);
+            gl.ClearColor(Color.SkyBlue);
 
             // Enable blending for textures transpanrency and set the blend to use the alpha to subtract
             gl.Enable(EnableCap.Blend);
@@ -44,18 +44,27 @@ namespace NovaEngine {
         }
 
 
-        public override void DrawMesh(Mesh mesh, Shader shader, Texture texture, Matrix4x4 modelMatrix) {
-            mesh.backend.Bind();
-            texture.backend.Bind();
+        public unsafe override void DrawMesh(Mesh mesh, Shader shader, Texture texture, Matrix4x4 modelMatrix) {
+            // mesh.backend.Bind();
+            // texture.backend.Bind();
             
+            // shader.backend.Use();
+            // shader.backend.SetUniform("uTexture", 0);
+            
+            // shader.backend.SetUniform("uModel", modelMatrix);
+            // SceneManager.sceneLayer?.scene.mainCamera.CreateMatrices(shader, new Vector2(window.FramebufferSize.X, window.FramebufferSize.Y));
+            
+            // gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.indices.Length, DrawElementsType.UnsignedInt, null);
+        
+
             shader.backend.Use();
-            shader.backend.SetUniform("uTexture", 0);
-            
             shader.backend.SetUniform("uModel", modelMatrix);
-            SceneManager.currentSceneLayer?.scene.mainCamera.CreateMatrices(shader, new Vector2(window.FramebufferSize.X, window.FramebufferSize.Y));
-            
-            // Need to change to base on the number of vertices and indices
-            gl.DrawArrays(PrimitiveType.Triangles, 0, 36);
+            SceneManager.sceneLayer?.scene.mainCamera.CreateMatrices(shader, new Vector2(window.FramebufferSize.X, window.FramebufferSize.Y));
+
+            texture.backend.Bind();
+
+            mesh.backend.Bind();
+            gl.DrawElements(PrimitiveType.Triangles, (uint)mesh.indices.Length, DrawElementsType.UnsignedInt, null);
         }
 
 
