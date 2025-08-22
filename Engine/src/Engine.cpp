@@ -1,6 +1,8 @@
-#include <Nova/Engine.h>
+#include <iostream>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <cstdio>
+
+#include "Nova/Engine.h"
 
 namespace Nova {
     bool Engine::Init() {
