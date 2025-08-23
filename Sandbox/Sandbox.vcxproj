@@ -68,8 +68,14 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>powershell -command "if (Test-Path \"../Build/bin/windows-x86_64/Debug/Sandbox/Resources\") { Remove-Item \"../Build/bin/windows-x86_64/Debug/Sandbox/Resources\" -Recurse -Force }"
+xcopy /E /I /Y "$(ProjectDir)/Resources" "../Build/bin/windows-x86_64/Debug/Sandbox/Resources"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -89,10 +95,17 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\External\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/NODEFAULTLIB:MSVCRT %(AdditionalOptions)</AdditionalOptions>
     </Link>
+    <PostBuildEvent>
+      <Command>powershell -command "if (Test-Path \"../Build/bin/windows-x86_64/Release/Sandbox/Resources\") { Remove-Item \"../Build/bin/windows-x86_64/Release/Sandbox/Resources\" -Recurse -Force }"
+xcopy /E /I /Y "$(ProjectDir)/Resources" "../Build/bin/windows-x86_64/Release/Sandbox/Resources"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\External\src\glad.c" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>

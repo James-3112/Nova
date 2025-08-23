@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="External">
+      <UniqueIdentifier>{089DB854-F469-1360-1D83-010809AF48EE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="External\src">
+      <UniqueIdentifier>{1F9F6B0A-0B02-FBAE-B487-3365A0C9C631}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\External\src\glad.c">
+      <Filter>External\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

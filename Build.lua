@@ -20,6 +20,7 @@ project "Nova"
         "Engine/src/**.c",
         "Engine/include/**.hpp",
         "Engine/src/**.cpp",
+
         "External/src/**.c",
         "External/src/**.cpp"
     }
@@ -55,16 +56,26 @@ project "Sandbox"
         "Sandbox/src/**.h",
         "Sandbox/src/**.c",
         "Sandbox/src/**.hpp",
-        "Sandbox/src/**.cpp"
+        "Sandbox/src/**.cpp",
+
+        "External/src/**.c",
+        "External/src/**.cpp"
     }
     
     includedirs { "Engine/include", "External/include" }
 
-    links { "Nova" }
+    libdirs { "External/lib" }
+    links { "Nova", "glfw3", "opengl32" }
 
     filter "system:windows"
         systemversion "latest"
         linkoptions { "/NODEFAULTLIB:MSVCRT" }
+
+        -- Copy Resources folder after build
+        postbuildcommands {
+            'powershell -command "if (Test-Path \\"%{cfg.targetdir}/Resources\\") { Remove-Item \\"%{cfg.targetdir}/Resources\\" -Recurse -Force }"',
+            'xcopy /E /I /Y "%{prj.location}/Resources" "%{cfg.targetdir}/Resources"'
+        }
 
     filter "configurations:Debug"
         runtime "Debug"

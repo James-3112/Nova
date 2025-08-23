@@ -99,11 +99,17 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\Nova\Engine.h" />
+    <ClInclude Include="include\Nova\ElementBufferObject.h" />
+    <ClInclude Include="include\Nova\Shader.h" />
+    <ClInclude Include="include\Nova\VertexArrayObject.h" />
+    <ClInclude Include="include\Nova\VertexBufferObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\External\src\glad.c" />
-    <ClCompile Include="src\Engine.cpp" />
+    <ClCompile Include="src\ElementBufferObject.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\VertexArrayObject.cpp" />
+    <ClCompile Include="src\VertexBufferObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
