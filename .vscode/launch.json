@@ -7,7 +7,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Build/bin/windows-x86_64/Debug/Sandbox/Sandbox.exe",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Debug (MSBuild)",
+            "preLaunchTask": "Build Debug",
             "stopAtEntry": false,
             "environment": [],
             "console": "externalTerminal"
@@ -18,7 +18,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Build/bin/windows-x86_64/Release/Sandbox/Sandbox.exe",
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build Release (MSBuild)",
+            "preLaunchTask": "Build Release",
             "stopAtEntry": false,
             "environment": [],
             "console": "externalTerminal"
