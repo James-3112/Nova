@@ -1,11 +1,12 @@
-workspace "Nova"
+workspace "NovaEngine"
     architecture "x64"
     configurations { "Debug", "Release" }
     startproject "Sandbox"
 
 outputdir = "%{cfg.system}-%{cfg.architecture}/%{cfg.buildcfg}"
 
-project "Engine"
+
+project "Nova"
     location "Engine"
     kind "StaticLib"
     language "C++"
@@ -30,6 +31,7 @@ project "Engine"
 
     filter "system:windows"
         systemversion "latest"
+        linkoptions { "/NODEFAULTLIB:MSVCRT" }
 
     filter "configurations:Debug"
         runtime "Debug"
@@ -38,6 +40,7 @@ project "Engine"
     filter "configurations:Release"
         runtime "Release"
         optimize "Speed"
+
 
 project "Sandbox"
     location "Sandbox"
@@ -55,9 +58,9 @@ project "Sandbox"
         "Sandbox/src/**.cpp"
     }
     
-    includedirs { "Engine/include" }
+    includedirs { "Engine/include", "External/include" }
 
-    links { "Engine" }
+    links { "Nova" }
 
     filter "system:windows"
         systemversion "latest"

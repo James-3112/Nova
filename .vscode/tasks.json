@@ -6,7 +6,7 @@
             "type": "shell",
             "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
-                "${workspaceFolder}/Nova.sln",
+                "${workspaceFolder}/NovaEngine.sln",
                 "/t:Build",
                 "/p:Configuration=Debug",
                 "/m"
@@ -19,7 +19,7 @@
             "type": "shell",
             "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
-                "${workspaceFolder}/Nova.sln",
+                "${workspaceFolder}/NovaEngine.sln",
                 "/t:Build",
                 "/p:Configuration=Release",
                 "/m"
@@ -32,7 +32,7 @@
             "type": "shell",
             "command": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe",
             "args": [
-                "${workspaceFolder}/Nova.sln",
+                "${workspaceFolder}/NovaEngine.sln",
                 "/t:Clean",
                 "/m"
             ],
