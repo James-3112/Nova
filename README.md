@@ -17,7 +17,7 @@ Nova is a work-in-progress C++ game engine focused on flexibility and modularity
 
 ## Features
 - Modular Layering System
-- Component Based Architecture (CBA) architecture
+- Component Based Architecture (CBA)
 
 
 ## Getting Started

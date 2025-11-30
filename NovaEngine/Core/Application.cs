@@ -1,86 +1,55 @@
-using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.Windowing;
-using Silk.NET.OpenGL;
-using System.Numerics;
-
-using System.Drawing;
-
-using StbImageSharp;
-using Silk.NET.OpenGL.Extensions.ImGui;
-using ImGuiNET;
-using System.Reflection;
 
 
 namespace NovaEngine {
-    public class Application {
-        public static Application Instance { get; private set; } = null!;
+    public static class Application {
+        // TODO - Could change this to be able to use multiple windows
+        public static Window window = null!;
 
-        private Window window = null!;
-
-        private Dictionary<Type, Layer> layers = new();
-        private List<Func<IWindow, Layer>> layerConstructors = new List<Func<IWindow, Layer>>();
-
-
-        public Application() {
-            Instance = this;
-        }
+        private static Dictionary<Type, Layer> layers = new();
+        private static List<Func<Layer>> layerConstructors = new List<Func<Layer>>();
 
 
-        public void Start() {
+        // Starts the application
+        public static void Start() {
+            // Creates the window for the application and adds all the callbacks for the window
             window = new Window();
-            window.silkWindow.Load += Load;
-            window.silkWindow.Update += Update;
-            window.silkWindow.FramebufferResize += FramebufferResize;
-            window.silkWindow.Closing += Close;
+            window.silkWindow.Load += WindowLoad;
+            window.silkWindow.Update += WindowUpdate;
+            window.silkWindow.FramebufferResize += WindowResize;
+            window.silkWindow.Closing += WindowClose;
 
+            // Starts the window
             window.Start();
         }
 
 
-        public void Quit() {
+        // Quits the application
+        public static void Quit() {
             window.Close();
         }
 
 
-        public void AddLayer<T>(params object[] dependencies) where T : Layer {
+        #region Layers
+        // Adds a layer to the layer constructors list to be initialized once the window has loaded
+        public static void AddLayer<T>(params object[] dependencies) where T : Layer {
             Type layerType = typeof(T);
 
             if (!typeof(Layer).IsAssignableFrom(layerType)) {
                 Debug.LogError($"Type must be a subclass of Layer. Got: {layerType.FullName}");
             }
 
-            layerConstructors.Add(_ => CreateLayerInstance(layerType, dependencies));
+            layerConstructors.Add(() => CreateLayerInstance(layerType, dependencies));
         }
 
-
-        public Layer AddAndStartLayer<T>(params object[] dependencies) where T : Layer {
-            Type layerType = typeof(T);
-
-            if (!typeof(Layer).IsAssignableFrom(layerType)) {
-                Debug.LogError($"Type must be a subclass of Layer. Got: {layerType.FullName}");
-            }
-
-            Layer layer = CreateLayerInstance(layerType, dependencies);
-            layers[layer.GetType()] = layer;
-            layer.Start();
-
-            return layer;
-        }
-
-
-        private Layer CreateLayerInstance(Type layerType, object[] dependencies) {
+        // Create the constructor for the layer to be initialized once the window has loaded
+        private static Layer CreateLayerInstance(Type layerType, object[] dependencies) {
             List<object> availableDeps = dependencies.ToList();
-            
-            if (window != null && window.silkWindow != null) {
-                availableDeps.Add(window.silkWindow);
-            }
 
-            var constructor = layerType.GetConstructors()
-                .FirstOrDefault(ctor => {
-                    var parameters = ctor.GetParameters();
-                    return parameters.All(param => availableDeps.Any(dep => param.ParameterType.IsInstanceOfType(dep)));
-                });
+            var constructor = layerType.GetConstructors().FirstOrDefault(ctor => {
+                var parameters = ctor.GetParameters();
+                return parameters.All(param => availableDeps.Any(dep => param.ParameterType.IsInstanceOfType(dep)));
+            });
 
             if (constructor != null) {
                 var args = constructor.GetParameters()
@@ -93,8 +62,8 @@ namespace NovaEngine {
             return null!;
         }
 
-
-        public void RemoveLayer(Layer layer) {
+        // Remove any layer using it's class
+        public static void RemoveLayer(Layer layer) {
             if (!layers.ContainsKey(layer.GetType())) {
                 Debug.LogWarn($"Tried to remove layer {layer.GetType().Name}, but it was not found");
                 return;
@@ -103,44 +72,53 @@ namespace NovaEngine {
             layer.Dispose();
             layers.Remove(layer.GetType());
         }
-
-
-        public T GetLayer<T>() where T : Layer {
+        
+        // Get any layer using it's class
+        public static T GetLayer<T>() where T : Layer {
             if (layers.TryGetValue(typeof(T), out Layer? layer)) return (T)layer;
 
             Debug.LogWarn($"Layer of type {typeof(T).Name} not found.");
             return null!;
         }
+        #endregion
 
 
-        private void Load() {
-            foreach (Func<IWindow, Layer> constructor in layerConstructors) {
-                Layer layer = constructor(window.silkWindow);
+        #region Window
+        // Once the Window loads
+        private static void WindowLoad() {
+            // Construct every layer and add it to the layers list
+            foreach (Func<Layer> constructor in layerConstructors) {
+                Layer layer = constructor();
                 layers[layer.GetType()] = layer;
             }
 
+            // Start every layer
             foreach (Layer layer in layers.Values) {
                 layer.Start();
             }
         }
 
 
-        private void Update(double deltaTime) {
+        // When the window updates, update every layer and pass in the delta time
+        private static void WindowUpdate(double deltaTime) {
             foreach (Layer layer in layers.Values) {
                 layer.Update(deltaTime);
             }
         }
         
 
-        private void FramebufferResize(Vector2D<int> newSize) {
+        // Resize the window
+        private static void WindowResize(Vector2D<int> newSize) {
             
         }
 
 
-        private void Close() {
+        // When the window is being closed dispose of all the objects
+        private static void WindowClose() {
             foreach (Layer layer in layers.Values) {
                 layer.Dispose();
             }
         }
+        #endregion
     }
 }

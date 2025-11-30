@@ -1,7 +1,3 @@
-using System.Numerics;
-using Silk.NET.Input;
-
-
 namespace NovaEngine {
     public static class Input {
         public static bool IsKeyPressed(KeyCode key) => InputLayer.keysPressed.Contains(KeyCodes.KeyCodeToKey(key));

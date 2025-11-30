@@ -1,6 +1,5 @@
 using System.Numerics;
 using Silk.NET.Input;
-using Silk.NET.Windowing;
 
 
 namespace NovaEngine {
@@ -24,8 +23,8 @@ namespace NovaEngine {
         private IInputContext inputContext = null!;
 
 
-        public InputLayer(IWindow window) {
-            inputContext = window.CreateInput();
+        public InputLayer() {
+            inputContext = Application.window.silkWindow.CreateInput();
             
             keyboard = inputContext.Keyboards.FirstOrDefault()!;
             mouse = inputContext.Mice.FirstOrDefault()!;;

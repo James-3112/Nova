@@ -1,18 +1,17 @@
-using Silk.NET.Windowing;
-
-
 namespace NovaEngine {
     public class RendererLayer : Layer {
         public enum Backend {OpenGL, DirectX, Vulkan}
-        private static Backend backend;
 
+        private static Backend backend;
         private static Renderer renderer = null!;
 
 
-        public RendererLayer(Backend backend, IWindow window) {
+        public RendererLayer(Backend backend) {
+            RendererLayer.backend = backend;
+
             switch (backend) {
                 case Backend.OpenGL:
-                    renderer = new GLRenderer(window);
+                    renderer = new GLRenderer(Application.window.silkWindow);
                     break;
                 case Backend.DirectX:
                     Debug.LogError("DirectX is not support yet");

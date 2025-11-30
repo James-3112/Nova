@@ -3,6 +3,7 @@ using NovaEngine;
 
 
 class Program {
+    // Create the vertices and indices for the test cube
     private static float[] vertices = {
         // Front face
         -0.5f, -0.5f,  0.5f,  0f, 0f,
@@ -49,22 +50,22 @@ class Program {
         // Left
         8, 9,10, 10,11, 8,
         // Right
-    12,13,14, 14,15,12,
+        12,13,14, 14,15,12,
         // Top
-    16,17,18, 18,19,16,
+        16,17,18, 18,19,16,
         // Bottom
-    20,21,22, 22,23,20
+        20,21,22, 22,23,20
     };
 
+    
     static void Main(string[] args) {
-        Application application = new Application();
-        
-        application.AddLayer<SceneLayer>();
-        application.AddLayer<GameLayer>();
-        application.AddLayer<InputLayer>();
-        application.AddLayer<RendererLayer>(RendererLayer.Backend.OpenGL);
+        // Create and add layers to the application
+        Application.AddLayer<SceneLayer>();
+        Application.AddLayer<GameLayer>();
+        Application.AddLayer<InputLayer>();
+        Application.AddLayer<RendererLayer>(RendererLayer.Backend.OpenGL);
 
-        application.Start();
+        Application.Start();
     }
 
     private class GameLayer : Layer {
@@ -75,32 +76,39 @@ class Program {
         private static float lookSensitivity = 0.1f;
 
         public override void Start() {
+            // Create the camera
             cameraGameObject.AddComponent(new Transform());
             cameraGameObject.GetComponent<Transform>().position = new Vector3(0.0f, 0.0f, 3.0f);
             cameraGameObject.GetComponent<Transform>().rotationEulerAngles = new Vector3(0.0f, 0.0f, -1.0f);
 
             cameraGameObject.AddComponent(camera);
-
+            
+            // Create the cube using the silk.png texture and shaders
             GameObject gameObject = new GameObject();
             gameObject.AddComponent(new Transform());
             gameObject.AddComponent(new Mesh(vertices, indices));
             gameObject.AddComponent(new MeshRenderer(new Shader("shader.vert", "shader.frag"), new Texture("silk.png")));
 
+            // Create the scene and add the gameobjects
             Scene scene = new Scene();
             scene.AddGameObject(cameraGameObject);
             scene.AddGameObject(gameObject);
 
+            // Load the scene using the SceneManager
             SceneManager.LoadScene(scene);
             if (SceneManager.sceneLayer != null) SceneManager.sceneLayer.scene.mainCamera = camera;
-        
+            
+            // Set the mouse mode to raw so that the cursor is invisible, and is restricted to the center of the screen
             Input.SetMouseMode(MouseMode.Raw);
         }
 
         public override void Update(double deltaTime) {
+            // If the escape is pressed closed the application
             if (Input.IsKeyPressed(KeyCode.Escape)) {
-                Application.Instance.Quit();
+                Application.Quit();
             }
 
+            // Move in the direction of the camera
             var moveSpeed = 2.5f * (float) deltaTime;
             Transform cameraTransform = cameraGameObject.GetComponent<Transform>();
 
@@ -109,7 +117,7 @@ class Program {
             if (Input.IsKeyHeld(KeyCode.A)) cameraTransform.position -= Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
             if (Input.IsKeyHeld(KeyCode.D)) cameraTransform.position += Vector3.Normalize(Vector3.Cross(cameraTransform.rotationEulerAngles, Vector3.UnitY)) * moveSpeed;
 
-            // Camera
+            // Rotate Camera base on mouse movement
             yaw += InputLayer.mouseDeltaPosition.X * lookSensitivity;
             pitch -= InputLayer.mouseDeltaPosition.Y * lookSensitivity;
 
