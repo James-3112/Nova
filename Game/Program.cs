@@ -1,2 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Nova;
+
+class Program {
+    static void Main(string[] args) {
+        Application application = new Application();
+        application.Run();
+    }
+}

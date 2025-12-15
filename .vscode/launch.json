@@ -2,13 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Editor",
-      "type": "coreclr",
-      "request": "launch",
-      "preLaunchTask": "Build Editor",
-      "program": "${workspaceFolder}/NovaEditor/bin/Debug/net9.0/NovaEditor.dll"
-    },
-    {
       "name": "Run Game",
       "type": "coreclr",
       "request": "launch",
