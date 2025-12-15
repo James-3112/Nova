@@ -2,8 +2,20 @@ namespace Nova;
 
 
 public class LayerStack {
-    public void PushLayer() {}
-    public void PopLayer() {}
+    private List<Layer> layers = new List<Layer>();
 
-    public void OnUpdate() {}
+    public void AddLayer(Layer layer) {
+        layers.Add(layer);
+        layer.OnAttach();
+    }
+
+    public void RemoveLayer(Layer layer) {
+        layers.Remove(layer);
+    }
+
+    public void Update() {
+        foreach (Layer layer in layers) {
+            layer.OnUpdate();
+        }
+    }
 }

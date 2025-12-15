@@ -1,28 +1,28 @@
-using Raylib_cs;
-
 namespace Nova;
 
 
 public class Application {
-    Window window;
+    public LayerStack layerStack;
+    private Window window;
 
     public Application() {
-        window = WindowFactory.CreateWindow(WindowFactory.Backend.Raylib);
+        layerStack = new LayerStack();
+        layerStack.AddLayer(new RenderLayer(RenderLayer.Backend.Raylib));
+
+        window = Window.CreateWindow(Window.Backend.Raylib);
     }
 
     public void Run() {
         window.Open();
 
-        while (!window.WindowShouldClose()) {
-            Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.Black);
-            Raylib.EndDrawing();
+        while (window.WindowShouldClose() == false) {
+            layerStack.Update();
         }
 
-        Stop();
+        OnShutdown();
     }
 
-    public void Stop() {
+    public void OnShutdown() {
         window.Close();
     }
 }
