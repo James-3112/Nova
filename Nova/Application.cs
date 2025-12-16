@@ -6,6 +6,8 @@ public class Application {
     private Window window;
 
     public Application() {
+        Input.SetBackend(Input.Backend.Raylib);
+
         layerStack = new LayerStack();
         layerStack.AddLayer(new RenderLayer(RenderLayer.Backend.Raylib));
 
@@ -16,7 +18,7 @@ public class Application {
         window.Open();
 
         while (window.WindowShouldClose() == false) {
-            layerStack.Update();
+            layerStack.UpdateLayers();
         }
 
         OnShutdown();

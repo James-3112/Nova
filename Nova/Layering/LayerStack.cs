@@ -13,7 +13,7 @@ public class LayerStack {
         layers.Remove(layer);
     }
 
-    public void Update() {
+    public void UpdateLayers() {
         foreach (Layer layer in layers) {
             layer.OnUpdate();
         }
