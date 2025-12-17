@@ -15,8 +15,7 @@ public class Pool<T> {
     }
 
     public T GetObject() {
-        if (pool.TryPop(out T? poolObject)) return poolObject;
-        return factory();
+        return pool.Count > 0 ? pool.Pop() : factory();
     }
 
     public void ReturnObject(T poolObject) {

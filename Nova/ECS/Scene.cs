@@ -2,10 +2,16 @@ namespace Nova;
 
 
 public class Scene {
-    // A dictionary of <entityID, entity>
+    Register entityIdRegister = new Register(0);
+    Database componentsDatabase = new Database();
 
-    public void CreateEntity() {}
-    public void DestroyEntity() {}
+    public Entity CreateEntity() {
+        return new Entity(entityIdRegister.GetId());
+    }
+
+    public void DestroyEntity(Entity entity) {
+        entityIdRegister.ReturnId(entity.id);
+    }
 
     public void OnStart() {}
     public void OnUpdate() {}
