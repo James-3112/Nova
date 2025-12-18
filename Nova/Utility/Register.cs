@@ -2,8 +2,8 @@ namespace Nova;
 
 
 public class Register {
+    public int nextId = 0;
     private Stack<int> registry;
-    private int nextId = 0;
 
     public Register(int startSize) {
         registry = new Stack<int>(startSize);

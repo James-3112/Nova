@@ -1,7 +1,7 @@
 namespace Nova;
 
 
-class ProjectManager {
+public class ProjectManager {
     public void NewProject() {}
     public void OpenProject() {}
     public void SaveProject() {}

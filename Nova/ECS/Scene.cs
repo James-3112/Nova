@@ -2,8 +2,8 @@ namespace Nova;
 
 
 public class Scene {
-    Register entityIdRegister = new Register(0);
-    Database componentsDatabase = new Database();
+    public Register entityIdRegister = new Register(0);
+    public Database componentsDatabase = new Database();
 
     public Entity CreateEntity() {
         return new Entity(entityIdRegister.GetId());
@@ -13,7 +13,20 @@ public class Scene {
         entityIdRegister.ReturnId(entity.id);
     }
 
-    public void OnStart() {}
-    public void OnUpdate() {}
-    public void OnShutdown() {}
+    public SceneSaveData CreateSaveData() {
+        SceneSaveData sceneSaveData = new SceneSaveData();
+        sceneSaveData.nextEntityId = entityIdRegister.nextId;
+
+        foreach (KeyValuePair<Type, ITable> table in componentsDatabase.tables) {
+            Dictionary<int, object> components = new Dictionary<int, object>();
+
+            table.Value.ForEach((entityId, component) => {
+                components[entityId] = component;
+            });
+
+            sceneSaveData.components[table.Key.Name] = components;
+        }
+
+        return sceneSaveData;
+    }
 }

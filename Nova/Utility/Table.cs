@@ -1,8 +1,8 @@
 namespace Nova;
 
 
-public class Table<T> {
-    private Dictionary<int, T> rows = new Dictionary<int, T>();
+public class Table<T> : ITable {
+    public Dictionary<int, T> rows = new Dictionary<int, T>();
 
     public bool Has(int id) {
         return rows.ContainsKey(id);
@@ -29,5 +29,11 @@ public class Table<T> {
 
     public void Remove(int id) {
         rows.Remove(id);
+    }
+
+    public void ForEach(Action<int, object> action) {
+        foreach (var kvp in rows) {
+            action(kvp.Key, kvp.Value!);
+        }
     }
 }

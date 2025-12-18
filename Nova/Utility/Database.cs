@@ -2,12 +2,12 @@ namespace Nova;
 
 
 public class Database {
-    private Dictionary<Type, object> tables = new Dictionary<Type, object>();
+    public Dictionary<Type, ITable> tables = new Dictionary<Type, ITable>();
 
-    public Table<T> Table<T>() {
+    public Table<T> GetTable<T>() {
         Type type = typeof(T);
 
-        if (!tables.TryGetValue(type, out var table)) {
+        if (!tables.TryGetValue(type, out ITable? table)) {
             table = new Table<T>();
             tables[type] = table;
         }
