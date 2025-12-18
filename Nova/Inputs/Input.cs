@@ -16,8 +16,12 @@ public abstract class Input {
     }
 
 
-    public static bool IsKeyDown(KeyCode key) => backend?.IsKeyDown(key) ?? false;
-    public static bool IsKeyPressed(KeyCode key) => backend?.IsKeyPressed(key) ?? false;
+    public static bool IsKeyPressed(KeyCode key) => backend?.IsKeyPressed(key) ?? false;                // Check if a key has been pressed once
+    public static bool IsKeyPressedRepeat(KeyCode key) => backend?.IsKeyPressedRepeat(key) ?? false;    // Check if a key has been pressed again
+    public static bool IsKeyDown(KeyCode key) => backend?.IsKeyDown(key) ?? false;                      // Check if a key is being pressed
+    public static bool IsKeyReleased(KeyCode key) => backend?.IsKeyReleased(key) ?? false;              // Check if a key has been released once
+    public static bool IsKeyUp(KeyCode key) => backend?.IsKeyUp(key) ?? false;                          // Check if a key is NOT being pressed
+    public static KeyCode GetKeyPressed() => backend?.GetKeyPressed() ?? KeyCode.Null;                  // Get key pressed (keycode), call it multiple times for keys queued, returns 0 when the queue is empty
     
 
     public enum KeyCode {
