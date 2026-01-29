@@ -1,43 +1,17 @@
+using System.Collections;
+
 namespace Nova;
 
 
-// class SparseSet<T> {
-//     List<int> sparse = new List<int>();  // Stores the index of the object within the dense list
-//     List<T> dense = new List<T>();      // Stores the object
-
-//     public void Add(int id, T component) {
-//         sparse[id] = dense.Count;
-//         dense.Add(component);
-//     }
-
-//     public T Get(int id) {
-//         int index = sparse[id];
-//         return dense[index];
-//     }
-
-//     public void Delete(int id) {
-//         int index = sparse[id];
-
-//         T backEntity = dense[dense.Count - 1];
-//         Swap(dense[index], backEntity);
-
-//         sparse[id] = -1; // null
-//         sparse[backEntity] = index;
-//     }
-
-//     private void Swap(T id1, T id2) {
-
-//     }
-// }
-
-
 // https://timiskhakov.github.io/posts/sparse-sets-and-where-to-find-them/
+
+
 public class Item<T> {
     public int key;
     public T? value;
 }
 
-public class SparseDictionary<T> {
+public class SparseDictionary<T> : IEnumerable<Item<T>> {
     private readonly Item<T>[] dense;
     private readonly int[] sparse;
     private int position;
@@ -45,6 +19,7 @@ public class SparseDictionary<T> {
     public SparseDictionary(int size) {
         dense = new Item<T>[size];
         sparse = new int[size];
+        position = 0;
 
         for (var i = 0; i < size; i++) {
             dense[i] = new Item<T>();
@@ -85,6 +60,16 @@ public class SparseDictionary<T> {
             
             position++;
         }
+    }
+
+    public IEnumerator<Item<T>> GetEnumerator() {
+        for (int i = 0; i < position; i++) {
+            yield return dense[i];
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        return GetEnumerator();
     }
 
     public bool ContainsKey(int key) {
